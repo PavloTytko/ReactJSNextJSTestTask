@@ -34,7 +34,9 @@ interface ProductsState {
 const initialState: ProductsState = {items: [], loading: false, types: []};
 
 export const fetchProducts = createAsyncThunk("products/fetch", async () => {
-    const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || ""}/rest/products`);
+    // Default to API on localhost:4000 when env is not provided (browser runtime)
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+    const res = await axios.get(`${baseUrl}/rest/products`);
     return res.data as Product[];
 });
 

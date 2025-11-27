@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   app:
     build:
@@ -11,8 +10,7 @@ services:
       - NEXT_PUBLIC_API_URL=http://api:4000
       - NEXT_PUBLIC_WS_URL=http://api:4000
       - NEXT_PUBLIC_WS_URL_BROWSER=http://localhost:4000
-    volumes:
-      - ./app:/usr/src/app
+    # No bind mount in production to avoid wiping the built .next folder
     networks:
       - utt-net
 
@@ -26,8 +24,6 @@ services:
       - MYSQL_USER=root
       - MYSQL_PASSWORD=root
       - MYSQL_DATABASE=utt
-    volumes:
-      - ./api:/usr/src/api
     networks:
       - utt-net
 

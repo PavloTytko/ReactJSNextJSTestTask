@@ -1,7 +1,7 @@
 {
   "name": "orders-products-api",
   "version": "1.0.0",
-  "type": "module",
+  "type": "commonjs",
   "main": "src/index.ts",
   "scripts": {
     "dev": "nodemon src/index.ts",

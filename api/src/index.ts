@@ -17,30 +17,26 @@ app.use(express.json());
 /* Provide static images from frontend public dir when needed */
 app.use("/images", express.static("/usr/src/api/images"));
 
-/* REST endpoints */
-app.get(`${process.env.NEXT_PUBLIC_API_URL || ""}/rest/orders`, (req, res) =>
-  res.json(orders),
-);
+/* REST endpoints
+   Note: Route paths must be relative (no absolute URL). The frontend should call
+   `${NEXT_PUBLIC_API_URL}/rest/...`, but the Express server must register just `/rest/...`.
+*/
+app.get(`/rest/orders`, (req, res) => res.json(orders));
 
-app.get(`${process.env.NEXT_PUBLIC_API_URL || ""}/rest/products`, (req, res) =>
-  res.json(products),
-);
+app.get(`/rest/products`, (req, res) => res.json(products));
 
-app.delete(
-  `${process.env.NEXT_PUBLIC_API_URL || ""}/rest/orders/:id`,
-  (req, res) => {
-    const id = Number(req.params.id);
-    const idx = orders.findIndex((o) => o.id === id);
+app.delete(`/rest/orders/:id`, (req, res) => {
+  const id = Number(req.params.id);
+  const idx = orders.findIndex((o) => o.id === id);
 
-    if (idx >= 0) {
-      orders.splice(idx, 1);
-      io?.emit("ordersUpdated", { orders });
-      return res.json({ ok: true });
-    }
+  if (idx >= 0) {
+    orders.splice(idx, 1);
+    io?.emit("ordersUpdated", { orders });
+    return res.json({ ok: true });
+  }
 
-    res.status(404).json({ ok: false });
-  },
-);
+  res.status(404).json({ ok: false });
+});
 
 /* GraphQL Schema */
 const schema = createSchema({

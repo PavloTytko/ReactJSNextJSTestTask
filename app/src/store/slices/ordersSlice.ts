@@ -18,7 +18,9 @@ interface OrdersState {
 const initialState: OrdersState = {items: [], loading: false};
 
 export const fetchOrders = createAsyncThunk("orders/fetch", async () => {
-    const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || ""}/rest/orders`);
+    // Default to API on localhost:4000 when env is not provided (browser runtime)
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+    const res = await axios.get(`${baseUrl}/rest/orders`);
     return res.data as Order[];
 });
 
