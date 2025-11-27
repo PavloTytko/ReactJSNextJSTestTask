@@ -1,0 +1,22 @@
+.root {
+  width: 420px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 8px 18px rgba(2, 6, 23, 0.06);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.products {
+  margin-top: 12px;
+}
+
+.productItem {
+  padding: 8px 0;
+  border-bottom: 1px solid #f3f4f6;
+}

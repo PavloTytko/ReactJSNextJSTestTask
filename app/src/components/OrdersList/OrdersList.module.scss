@@ -1,0 +1,32 @@
+.root {
+  width: 520px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  margin-right: 20px;
+  box-shadow: 0 4px 8px rgba(15, 23, 42, 0.03);
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  border-bottom: 1px solid #eef2f7;
+}
+
+.itemTitle {
+  font-weight: 600;
+}
+
+.itemMeta {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.btnDelete {
+  background: transparent;
+  border: 1px solid #ef4444;
+  padding: 6px 8px;
+  color: #ef4444;
+  border-radius: 6px;
+}

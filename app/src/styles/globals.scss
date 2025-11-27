@@ -1,0 +1,22 @@
+:root {
+  --bg: #f6f7fb;
+  --panel: #fff;
+  --accent: #2563eb;
+  --muted: #6b7280;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: var(--bg);
+  color: #111827;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+input, button, select {
+  font-family: inherit;
+}
