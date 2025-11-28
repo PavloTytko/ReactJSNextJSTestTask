@@ -51,6 +51,18 @@ export const deleteOrder = createAsyncThunk(
     }
 );
 
+export const addProductToOrder = createAsyncThunk(
+    "orders/addProductToOrder",
+    async (params: { orderId: number; productId: number }) => {
+        const isBrowser = typeof window !== "undefined";
+        const baseUrl = isBrowser
+            ? (process.env.NEXT_PUBLIC_API_URL_BROWSER || process.env.NEXT_PUBLIC_WS_URL_BROWSER || "http://localhost:4000")
+            : (process.env.NEXT_PUBLIC_API_URL || "http://api:4000");
+        const res = await axios.post(`${baseUrl}/rest/orders/${params.orderId}/products`, { productId: params.productId });
+        return res.data as Order; // updated order
+    }
+);
+
 const ordersSlice = createSlice({
     name: "orders",
     initialState,
@@ -85,6 +97,10 @@ const ordersSlice = createSlice({
             })
             .addCase(deleteOrder.fulfilled, (s, a) => {
                 s.items = s.items.filter((o) => o.id !== a.payload);
+            })
+            .addCase(addProductToOrder.fulfilled, (s, a) => {
+                const idx = s.items.findIndex((o) => o.id === a.payload.id);
+                if (idx >= 0) s.items[idx] = a.payload;
             });
     }
 });

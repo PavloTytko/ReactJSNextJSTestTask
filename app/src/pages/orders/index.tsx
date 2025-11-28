@@ -15,6 +15,7 @@ import OrderSidebar from "../../components/OrderSidebar/OrderSidebar";
 import DeleteModal from "../../components/DeleteModal/DeleteModal";
 import withAuth from "../../components/protectedRoute/withAuth";
 import AddOrderModal from "../../components/AddOrderModal/AddOrderModal";
+import { fetchProducts } from "../../store/slices/productsSlice";
 
 const OrdersPage: React.FC<{ initialOrders?: Order[] }> = ({
   initialOrders,
@@ -28,6 +29,7 @@ const OrdersPage: React.FC<{ initialOrders?: Order[] }> = ({
   useEffect(() => {
     dispatch(setOrders(initialOrders || []));
     dispatch(fetchOrders() as any);
+    dispatch(fetchProducts() as any);
   }, [dispatch, initialOrders]);
 
   const confirmDelete = (id: number) => {

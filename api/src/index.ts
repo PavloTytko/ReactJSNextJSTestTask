@@ -92,6 +92,37 @@ app.delete(`/rest/orders/:id`, (req, res) => {
   res.status(404).json({ ok: false });
 });
 
+// Add product to order
+app.post(`/rest/orders/:id/products`, (req, res) => {
+  const orderId = Number(req.params.id);
+  const { productId } = req.body || {};
+
+  if (typeof productId !== "number") {
+    return res.status(400).json({ ok: false, error: "productId must be provided" });
+  }
+
+  const order = orders.find((o) => o.id === orderId);
+  if (!order) return res.status(404).json({ ok: false, error: "Order not found" });
+
+  const product = products.find((p) => p.id === productId);
+  if (!product) return res.status(404).json({ ok: false, error: "Product not found" });
+
+  // assign product to this order
+  (product as any).order = orderId;
+
+  // ensure order.products exists and includes the product reference
+  if (!Array.isArray((order as any).products)) {
+    (order as any).products = [];
+  }
+  // Allow repeats: push the product even if it's already present in the order
+  (order as any).products.push(product);
+
+  io?.emit("ordersUpdated", { orders });
+  io?.emit("productsUpdated", { products });
+
+  return res.json(order);
+});
+
 // Create product
 app.post(`/rest/products`, (req, res) => {
   const body = req.body || {};
