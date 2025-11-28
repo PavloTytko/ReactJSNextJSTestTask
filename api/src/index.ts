@@ -6,10 +6,47 @@ import { orders, products } from "../mockData";
 import { createYoga, createSchema } from "graphql-yoga";
 
 const app = express();
+
+// Flexible CORS: allow localhost/127.0.0.1 on common dev ports and Docker host "app"
+const allowedFromEnv = (process.env.ALLOWED_ORIGINS || "")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
+
+const defaultAllowed = [
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+  "http://localhost:3001",
+  "http://127.0.0.1:3001",
+  "http://localhost:4000", // in case the frontend is also served on 4000 in some setups
+  "http://127.0.0.1:4000",
+  "http://app:3000",
+];
+
+const allowedOrigins = new Set([...defaultAllowed, ...allowedFromEnv]);
+
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://app:3000"],
+    origin: (origin, callback) => {
+      // Allow requests with no origin like mobile apps or curl
+      if (!origin) return callback(null, true);
+
+      // Accept localhost/127.0.0.1 on any port 3000-3999 by pattern, plus explicit list above
+      const isLocalPort = /^(http:\/\/(localhost|127\.0\.0\.1):3\d{3})$/.test(origin);
+      if (isLocalPort || allowedOrigins.has(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error(`CORS: Origin not allowed: ${origin}`));
+    },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "X-Requested-With",
+      "Accept",
+      "Origin",
+    ],
   }),
 );
 app.use(express.json());
@@ -109,7 +146,12 @@ app.use(yoga.graphqlEndpoint, yoga);
 /* Socket.io setup */
 const io = new IOServer(httpServer, {
   cors: {
-    origin: ["http://localhost:3000", "http://app:3000"],
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      const isLocalPort = /^(http:\/\/(localhost|127\.0\.0\.1):3\d{3})$/.test(origin);
+      if (isLocalPort || allowedOrigins.has(origin)) return callback(null, true);
+      return callback(new Error(`CORS (socket): Origin not allowed: ${origin}`));
+    },
     methods: ["GET", "POST"],
     credentials: true,
   },

@@ -34,8 +34,11 @@ interface ProductsState {
 const initialState: ProductsState = {items: [], loading: false, types: []};
 
 export const fetchProducts = createAsyncThunk("products/fetch", async () => {
-    // Default to API on localhost:4000 when env is not provided (browser runtime)
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+    // Choose API base URL depending on runtime (browser vs SSR)
+    const isBrowser = typeof window !== "undefined";
+    const baseUrl = isBrowser
+        ? (process.env.NEXT_PUBLIC_API_URL_BROWSER || process.env.NEXT_PUBLIC_WS_URL_BROWSER || "http://localhost:4000")
+        : (process.env.NEXT_PUBLIC_API_URL || "http://api:4000");
     const res = await axios.get(`${baseUrl}/rest/products`);
     return res.data as Product[];
 });
