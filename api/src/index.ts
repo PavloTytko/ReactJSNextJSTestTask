@@ -72,6 +72,7 @@ app.post(`/rest/orders`, (req, res) => {
     title: body.title ?? `Order ${nextId}`,
     date: body.date ?? new Date().toISOString(),
     description: body.description ?? undefined,
+    photo: body.photo ?? "/images/placeholder.png",
     products: Array.isArray(body.products) ? body.products : [],
   };
   orders.push(newOrder);
@@ -188,6 +189,7 @@ const schema = createSchema({
       title: String
       date: String
       description: String
+      photo: String
       products: [Product]
     }
 

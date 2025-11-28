@@ -6,6 +6,7 @@ export interface Order {
     title: string;
     date: string;
     description?: string;
+    photo?: string;
     products?: any[];
 }
 

@@ -23,6 +23,7 @@ export interface Product {
     price?: Price[];
     order?: number;
     date?: string;
+    isNew?: number;
 }
 
 interface ProductsState {
