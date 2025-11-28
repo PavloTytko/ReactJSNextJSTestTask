@@ -62,6 +62,23 @@ app.get(`/rest/orders`, (req, res) => res.json(orders));
 
 app.get(`/rest/products`, (req, res) => res.json(products));
 
+// Create order
+app.post(`/rest/orders`, (req, res) => {
+  const body = req.body || {};
+  // generate new id
+  const nextId = orders.length ? Math.max(...orders.map((o) => o.id || 0)) + 1 : 1;
+  const newOrder = {
+    id: nextId,
+    title: body.title ?? `Order ${nextId}`,
+    date: body.date ?? new Date().toISOString(),
+    description: body.description ?? undefined,
+    products: Array.isArray(body.products) ? body.products : [],
+  };
+  orders.push(newOrder);
+  io?.emit("ordersUpdated", { orders });
+  return res.status(201).json(newOrder);
+});
+
 app.delete(`/rest/orders/:id`, (req, res) => {
   const id = Number(req.params.id);
   const idx = orders.findIndex((o) => o.id === id);
@@ -73,6 +90,40 @@ app.delete(`/rest/orders/:id`, (req, res) => {
   }
 
   res.status(404).json({ ok: false });
+});
+
+// Create product
+app.post(`/rest/products`, (req, res) => {
+  const body = req.body || {};
+  const nextId = products.length ? Math.max(...products.map((p) => p.id || 0)) + 1 : 1;
+  const newProduct = {
+    id: nextId,
+    title: body.title ?? `Product ${nextId}`,
+    type: body.type ?? "Unknown",
+    serialNumber: body.serialNumber ?? undefined,
+    specification: body.specification ?? undefined,
+    guarantee: body.guarantee ?? undefined,
+    price: Array.isArray(body.price) ? body.price : undefined,
+    order: typeof body.order === "number" ? body.order : undefined,
+    date: body.date ?? new Date().toISOString(),
+    photo: body.photo ?? "/images/placeholder.png",
+    isNew: typeof body.isNew === "number" ? body.isNew : 1,
+  };
+  products.push(newProduct);
+  io?.emit("productsUpdated", { products });
+  return res.status(201).json(newProduct);
+});
+
+// Delete product
+app.delete(`/rest/products/:id`, (req, res) => {
+  const id = Number(req.params.id);
+  const idx = products.findIndex((p) => p.id === id);
+  if (idx >= 0) {
+    products.splice(idx, 1);
+    io?.emit("productsUpdated", { products });
+    return res.json({ ok: true });
+  }
+  return res.status(404).json({ ok: false });
 });
 
 /* GraphQL Schema */

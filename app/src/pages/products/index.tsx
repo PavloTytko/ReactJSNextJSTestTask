@@ -1,5 +1,5 @@
 import { GetServerSideProps } from "next";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
@@ -9,13 +9,16 @@ import {
   fetchProducts,
   Product,
   setProducts,
+  createProduct,
 } from "../../store/slices/productsSlice";
+import AddProductModal from "../../components/AddProductModal/AddProductModal";
 
 const ProductsPage: React.FC<{ initialProducts?: Product[] }> = ({
   initialProducts,
 }) => {
   const dispatch = useDispatch();
   const { items, loading } = useSelector((s: RootState) => s.products);
+  const [showAdd, setShowAdd] = useState(false);
 
   useEffect(() => {
     // hydrate from SSR then ensure fresh data on client
@@ -25,10 +28,29 @@ const ProductsPage: React.FC<{ initialProducts?: Product[] }> = ({
 
   return (
     <div style={{ width: "100%" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "left",
+          alignItems: "center",
+          marginBottom: 12,
+        }}
+      >
+        <button onClick={() => setShowAdd(true)}>+</button>
+        <h3 style={{ margin: 0 }}>Products</h3>
+      </div>
       {loading && items.length === 0 ? (
         <div>Loading...</div>
       ) : (
         <ProductsList products={items} />
+      )}
+      {showAdd && (
+        <AddProductModal
+          onClose={() => setShowAdd(false)}
+          onSubmit={(p) => {
+            dispatch(createProduct(p) as any).then(() => setShowAdd(false));
+          }}
+        />
       )}
     </div>
   );

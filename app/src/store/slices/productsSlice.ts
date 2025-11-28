@@ -43,6 +43,18 @@ export const fetchProducts = createAsyncThunk("products/fetch", async () => {
     return res.data as Product[];
 });
 
+export const createProduct = createAsyncThunk(
+    "products/create",
+    async (product: Omit<Product, "id">) => {
+        const isBrowser = typeof window !== "undefined";
+        const baseUrl = isBrowser
+            ? (process.env.NEXT_PUBLIC_API_URL_BROWSER || process.env.NEXT_PUBLIC_WS_URL_BROWSER || "http://localhost:4000")
+            : (process.env.NEXT_PUBLIC_API_URL || "http://api:4000");
+        const res = await axios.post(`${baseUrl}/rest/products`, product);
+        return res.data as Product;
+    }
+);
+
 const productsSlice = createSlice({
     name: "products",
     initialState,
@@ -50,6 +62,12 @@ const productsSlice = createSlice({
         setProducts(state, action: PayloadAction<Product[]>) {
             state.items = action.payload;
             state.types = Array.from(new Set(action.payload.map((p) => p.type)));
+        },
+        addProduct(state, action: PayloadAction<Product>) {
+            state.items.push(action.payload);
+            if (action.payload.type && !state.types.includes(action.payload.type)) {
+                state.types.push(action.payload.type);
+            }
         }
     },
     extraReducers: (builder) => {
@@ -63,9 +81,14 @@ const productsSlice = createSlice({
             })
             .addCase(fetchProducts.rejected, (s) => {
                 s.loading = false;
+            })
+            .addCase(createProduct.fulfilled, (s, a) => {
+                s.items.push(a.payload);
+                const t = a.payload.type;
+                if (t && !s.types.includes(t)) s.types.push(t);
             });
     }
 });
 
-export const {setProducts} = productsSlice.actions;
+export const {setProducts, addProduct} = productsSlice.actions;
 export default productsSlice.reducer;
