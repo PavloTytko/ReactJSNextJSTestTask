@@ -16,12 +16,14 @@ import DeleteModal from "../../components/DeleteModal/DeleteModal";
 import withAuth from "../../components/protectedRoute/withAuth";
 import AddOrderModal from "../../components/AddOrderModal/AddOrderModal";
 import { fetchProducts } from "../../store/slices/productsSlice";
+import { getApiBaseUrl } from "../../utils/api";
 
 const OrdersPage: React.FC<{ initialOrders?: Order[] }> = ({
   initialOrders,
 }) => {
   const dispatch = useDispatch();
   const { items, loading } = useSelector((s: RootState) => s.orders);
+  const search = useSelector((s: RootState) => s.ui.searchQuery);
   const [selected, setSelected] = useState<Order | null>(null);
   const [showDelete, setShowDelete] = useState<number | null>(null);
   const [showAdd, setShowAdd] = useState(false);
@@ -39,6 +41,11 @@ const OrdersPage: React.FC<{ initialOrders?: Order[] }> = ({
       if (selected?.id === id) setSelected(null);
     });
   };
+
+  // Re-fetch orders from the API whenever search changes (server-side filtering)
+  useEffect(() => {
+    (dispatch as any)(fetchOrders(search ? { q: search } : undefined));
+  }, [dispatch, search]);
 
   return (
     <div style={{ display: "flex", gap: 12, flexDirection: "column" }}>
@@ -87,11 +94,8 @@ const OrdersPage: React.FC<{ initialOrders?: Order[] }> = ({
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
-    // Prefer explicit server API URL; fall back to browser URL; finally localhost (useful when not running Docker)
-    const baseUrl =
-      process.env.NEXT_PUBLIC_API_URL ||
-      process.env.NEXT_PUBLIC_API_URL_BROWSER ||
-      "http://localhost:4000";
+    // Use centralized resolver to ensure SSR hits the same API as the client
+    const baseUrl = getApiBaseUrl();
     const res = await axios.get(`${baseUrl}/rest/orders`);
     return { props: { initialOrders: res.data } };
   } catch (e) {

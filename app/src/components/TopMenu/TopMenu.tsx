@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import styles from "./TopMenu.module.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store/store";
+import { setSearchQuery } from "../../store/slices/uiSlice";
+import { getWsBaseUrl } from "../../utils/api";
 
-/**
- * Correct WebSocket URL handling:
- * - Browser: NEXT_PUBLIC_WS_URL_BROWSER or localhost:4000
- * - Docker SSR/server: NEXT_PUBLIC_WS_URL or api:4000
- */
-const wsUrl =
-  typeof window !== "undefined"
-    ? process.env.NEXT_PUBLIC_WS_URL_BROWSER || "http://localhost:4000"
-    : process.env.NEXT_PUBLIC_WS_URL || "http://api:4000";
+// Centralized WebSocket base URL resolution (aligns with REST)
+const wsUrl = getWsBaseUrl();
 
 const TopMenu: React.FC = () => {
   const [now, setNow] = useState(new Date());
   const [sessions, setSessions] = useState(0);
+  const dispatch = useDispatch();
+  const searchQuery = useSelector((s: RootState) => s.ui.searchQuery);
 
   useEffect(() => {
     const t = setInterval(() => setNow(new Date()), 1000);
@@ -36,12 +35,34 @@ const TopMenu: React.FC = () => {
     };
   }, []);
 
+  // NOTE: We intentionally avoid local state/debounce to make the search
+  // reflect immediately and prevent any race with Redux.
+
   return (
     <div className={styles.topMenu}>
       <div className={styles.left}>Orders / Products App</div>
       <div className={styles.center}>{now.toLocaleString()}</div>
       <div className={styles.right}>
-        Active sessions: <strong>{sessions}</strong>
+        <input
+          type="text"
+          className={styles.search}
+          placeholder="Search orders and products..."
+          value={searchQuery}
+          onChange={(e) => (dispatch as any)(setSearchQuery(e.target.value))}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              // Already synced onChange; optionally prevent form submits
+              e.preventDefault();
+            }
+            if (e.key === "Escape") {
+              // Clear both the global query and the input UI so they don't get out of sync
+              (dispatch as any)(setSearchQuery(""));
+            }
+          }}
+        />
+        <span className={styles.sessions}>
+          Active: <strong>{sessions}</strong>
+        </span>
       </div>
     </div>
   );

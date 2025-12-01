@@ -58,9 +58,39 @@ app.use("/images", express.static("/usr/src/api/images"));
    Note: Route paths must be relative (no absolute URL). The frontend should call
    `${NEXT_PUBLIC_API_URL}/rest/...`, but the Express server must register just `/rest/...`.
 */
-app.get(`/rest/orders`, (req, res) => res.json(orders));
+app.get(`/rest/orders`, (req, res) => {
+  const q = String((req.query as any)?.q || "").trim().toLowerCase();
+  if (!q) return res.json(orders);
+  const contains = (v?: any) => typeof v === "string" && v.toLowerCase().includes(q);
+  const matches = orders.filter((o) => {
+    const inOrder =
+      contains((o as any).title) ||
+      contains((o as any).description) ||
+      String((o as any).id || "").toLowerCase().includes(q) ||
+      contains((o as any).date);
+    const prods: any[] = Array.isArray((o as any).products) ? (o as any).products : [];
+    const inProducts = prods.some(
+      (p: any) => contains(p?.title) || contains(p?.type) || contains(p?.serialNumber) || contains(p?.specification),
+    );
+    return inOrder || inProducts;
+  });
+  return res.json(matches);
+});
 
-app.get(`/rest/products`, (req, res) => res.json(products));
+app.get(`/rest/products`, (req, res) => {
+  const q = String((req.query as any)?.q || "").trim().toLowerCase();
+  if (!q) return res.json(products);
+  const contains = (v?: any) => typeof v === "string" && v.toLowerCase().includes(q);
+  const matches = products.filter((p: any) =>
+    contains(p.title) ||
+    contains(p.type) ||
+    contains(p.serialNumber) ||
+    contains(p.specification) ||
+    // Also search price currency symbols, if present
+    (Array.isArray(p.price) ? p.price.some((pr: any) => contains(pr?.symbol)) : false)
+  );
+  return res.json(matches);
+});
 
 // Create order
 app.post(`/rest/orders`, (req, res) => {

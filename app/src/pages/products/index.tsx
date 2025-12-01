@@ -12,12 +12,14 @@ import {
   createProduct,
 } from "../../store/slices/productsSlice";
 import AddProductModal from "../../components/AddProductModal/AddProductModal";
+import { getApiBaseUrl } from "../../utils/api";
 
 const ProductsPage: React.FC<{ initialProducts?: Product[] }> = ({
   initialProducts,
 }) => {
   const dispatch = useDispatch();
   const { items, loading } = useSelector((s: RootState) => s.products);
+  const search = useSelector((s: RootState) => s.ui.searchQuery);
   const [showAdd, setShowAdd] = useState(false);
 
   useEffect(() => {
@@ -25,6 +27,11 @@ const ProductsPage: React.FC<{ initialProducts?: Product[] }> = ({
     dispatch(setProducts(initialProducts || []));
     dispatch(fetchProducts() as any);
   }, [dispatch, initialProducts]);
+
+  // Re-fetch products from the API whenever search changes (server-side filtering)
+  useEffect(() => {
+    (dispatch as any)(fetchProducts(search ? { q: search } : undefined));
+  }, [dispatch, search]);
 
   return (
     <div style={{ width: "100%" }}>
@@ -58,9 +65,8 @@ const ProductsPage: React.FC<{ initialProducts?: Product[] }> = ({
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
-    const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL || "http://api:4000"}/rest/products`,
-    );
+    const baseUrl = getApiBaseUrl();
+    const res = await axios.get(`${baseUrl}/rest/products`);
     return { props: { initialProducts: res.data } };
   } catch (e) {
     return { props: { initialProducts: [] } };

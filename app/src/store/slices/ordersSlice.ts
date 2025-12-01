@@ -1,5 +1,6 @@
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import axios from "axios";
+import { getApiBaseUrl } from "../../utils/api";
 
 export interface Order {
     id: number;
@@ -18,23 +19,19 @@ interface OrdersState {
 
 const initialState: OrdersState = {items: [], loading: false};
 
-export const fetchOrders = createAsyncThunk("orders/fetch", async () => {
-    // Choose API base URL depending on runtime (browser vs SSR)
-    const isBrowser = typeof window !== "undefined";
-    const baseUrl = isBrowser
-        ? (process.env.NEXT_PUBLIC_API_URL_BROWSER || process.env.NEXT_PUBLIC_WS_URL_BROWSER || "http://localhost:4000")
-        : (process.env.NEXT_PUBLIC_API_URL || "http://api:4000");
-    const res = await axios.get(`${baseUrl}/rest/orders`);
-    return res.data as Order[];
-});
+export const fetchOrders = createAsyncThunk(
+    "orders/fetch",
+    async (params?: { q?: string }) => {
+        const baseUrl = getApiBaseUrl();
+        const res = await axios.get(`${baseUrl}/rest/orders`, { params });
+        return res.data as Order[];
+    }
+);
 
 export const createOrder = createAsyncThunk(
     "orders/create",
     async (order: Omit<Order, "id">) => {
-        const isBrowser = typeof window !== "undefined";
-        const baseUrl = isBrowser
-            ? (process.env.NEXT_PUBLIC_API_URL_BROWSER || process.env.NEXT_PUBLIC_WS_URL_BROWSER || "http://localhost:4000")
-            : (process.env.NEXT_PUBLIC_API_URL || "http://api:4000");
+        const baseUrl = getApiBaseUrl();
         const res = await axios.post(`${baseUrl}/rest/orders`, order);
         return res.data as Order;
     }
@@ -43,10 +40,7 @@ export const createOrder = createAsyncThunk(
 export const deleteOrder = createAsyncThunk(
     "orders/delete",
     async (id: number) => {
-        const isBrowser = typeof window !== "undefined";
-        const baseUrl = isBrowser
-            ? (process.env.NEXT_PUBLIC_API_URL_BROWSER || process.env.NEXT_PUBLIC_WS_URL_BROWSER || "http://localhost:4000")
-            : (process.env.NEXT_PUBLIC_API_URL || "http://api:4000");
+        const baseUrl = getApiBaseUrl();
         await axios.delete(`${baseUrl}/rest/orders/${id}`);
         return id;
     }
@@ -55,10 +49,7 @@ export const deleteOrder = createAsyncThunk(
 export const addProductToOrder = createAsyncThunk(
     "orders/addProductToOrder",
     async (params: { orderId: number; productId: number }) => {
-        const isBrowser = typeof window !== "undefined";
-        const baseUrl = isBrowser
-            ? (process.env.NEXT_PUBLIC_API_URL_BROWSER || process.env.NEXT_PUBLIC_WS_URL_BROWSER || "http://localhost:4000")
-            : (process.env.NEXT_PUBLIC_API_URL || "http://api:4000");
+        const baseUrl = getApiBaseUrl();
         const res = await axios.post(`${baseUrl}/rest/orders/${params.orderId}/products`, { productId: params.productId });
         return res.data as Order; // updated order
     }
