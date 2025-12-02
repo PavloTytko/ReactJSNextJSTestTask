@@ -10,12 +10,15 @@ import { getWsBaseUrl } from "../../utils/api";
 const wsUrl = getWsBaseUrl();
 
 const TopMenu: React.FC = () => {
-  const [now, setNow] = useState(new Date());
+  // Avoid SSR/CSR mismatch by rendering time only after mount
+  const [now, setNow] = useState<Date | null>(null);
   const [sessions, setSessions] = useState(0);
   const dispatch = useDispatch();
   const searchQuery = useSelector((s: RootState) => s.ui.searchQuery);
 
   useEffect(() => {
+    // Initialize immediately after mount and then tick every second
+    setNow(new Date());
     const t = setInterval(() => setNow(new Date()), 1000);
 
     const socket: Socket = io(wsUrl, {
@@ -41,7 +44,9 @@ const TopMenu: React.FC = () => {
   return (
     <div className={styles.topMenu}>
       <div className={styles.left}>Orders / Products App</div>
-      <div className={styles.center}>{now.toLocaleString()}</div>
+      <div className={styles.center} suppressHydrationWarning>
+        {now ? now.toLocaleString() : ""}
+      </div>
       <div className={styles.right}>
         <input
           type="text"
