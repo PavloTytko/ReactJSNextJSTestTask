@@ -2,9 +2,10 @@ import React from "react";
 import { Order } from "../../store/slices/ordersSlice";
 import styles from "./OrderSidebar.module.scss";
 import { AnimatePresence, motion } from "framer-motion";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import AddProductToOrder from "../AddProductToOrder/AddProductToOrder";
+import { removeProductFromOrder } from "../../store/slices/ordersSlice";
 
 const OrderSidebar: React.FC<{ order: Order | null; onClose: () => void }> = ({
   order,
@@ -14,6 +15,15 @@ const OrderSidebar: React.FC<{ order: Order | null; onClose: () => void }> = ({
   const currentOrder = useSelector((s: RootState) =>
     order ? s.orders.items.find((o) => o.id === order.id) || order : null,
   );
+
+  const dispatch = useDispatch();
+
+  const onDeleteProduct = (productId: number) => {
+    if (!currentOrder) return;
+    (dispatch as any)(
+      removeProductFromOrder({ orderId: currentOrder.id, productId }),
+    );
+  };
 
   return (
     <AnimatePresence>
@@ -33,7 +43,16 @@ const OrderSidebar: React.FC<{ order: Order | null; onClose: () => void }> = ({
             <h5>Products</h5>
             {currentOrder.products?.map((p: any, idx: number) => (
               <div key={`${p.id}-${idx}`} className={styles.productItem}>
-                {p.title} — {p.type}
+                <span>
+                  {p.title} — {p.type}
+                </span>
+                <button
+                  onClick={() => onDeleteProduct(Number(p.id))}
+                  aria-label={`Remove ${p.title} from order`}
+                  style={{ marginLeft: 8 }}
+                >
+                  Remove
+                </button>
               </div>
             ))}
             {currentOrder && <AddProductToOrder order={currentOrder} />}

@@ -154,6 +154,40 @@ app.post(`/rest/orders/:id/products`, (req, res) => {
   return res.json(order);
 });
 
+// Remove product from order
+app.delete(`/rest/orders/:id/products/:productId`, (req, res) => {
+  const orderId = Number(req.params.id);
+  const productId = Number(req.params.productId);
+
+  const order = orders.find((o) => o.id === orderId);
+  if (!order) return res.status(404).json({ ok: false, error: "Order not found" });
+
+  const product = products.find((p) => p.id === productId);
+  if (!product) return res.status(404).json({ ok: false, error: "Product not found" });
+
+  // Detach only a single occurrence of the product from the order (in case duplicates exist)
+  if (Array.isArray((order as any).products)) {
+    const list: any[] = (order as any).products;
+    const idx = list.findIndex((p: any) => p?.id === productId);
+    if (idx >= 0) {
+      list.splice(idx, 1);
+    }
+  }
+
+  // If no more instances of this product remain in the order, clear its order reference
+  const stillInOrder = Array.isArray((order as any).products)
+    ? (order as any).products.some((p: any) => p?.id === productId)
+    : false;
+  if (!stillInOrder && (product as any).order === orderId) {
+    (product as any).order = undefined;
+  }
+
+  io?.emit("ordersUpdated", { orders });
+  io?.emit("productsUpdated", { products });
+
+  return res.json(order);
+});
+
 // Create product
 app.post(`/rest/products`, (req, res) => {
   const body = req.body || {};

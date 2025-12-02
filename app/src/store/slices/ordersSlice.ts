@@ -55,6 +55,15 @@ export const addProductToOrder = createAsyncThunk(
     }
 );
 
+export const removeProductFromOrder = createAsyncThunk(
+    "orders/removeProductFromOrder",
+    async (params: { orderId: number; productId: number }) => {
+        const baseUrl = getApiBaseUrl();
+        const res = await axios.delete(`${baseUrl}/rest/orders/${params.orderId}/products/${params.productId}`);
+        return res.data as Order; // updated order
+    }
+);
+
 const ordersSlice = createSlice({
     name: "orders",
     initialState,
@@ -91,6 +100,10 @@ const ordersSlice = createSlice({
                 s.items = s.items.filter((o) => o.id !== a.payload);
             })
             .addCase(addProductToOrder.fulfilled, (s, a) => {
+                const idx = s.items.findIndex((o) => o.id === a.payload.id);
+                if (idx >= 0) s.items[idx] = a.payload;
+            })
+            .addCase(removeProductFromOrder.fulfilled, (s, a) => {
                 const idx = s.items.findIndex((o) => o.id === a.payload.id);
                 if (idx >= 0) s.items[idx] = a.payload;
             });
