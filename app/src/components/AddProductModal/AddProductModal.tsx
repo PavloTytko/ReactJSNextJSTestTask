@@ -73,38 +73,38 @@ const AddProductModal: React.FC<{
             <motion.div className={styles.modal} initial={{scale: 0.95, opacity: 0}} animate={{scale: 1, opacity: 1}}
                         onClick={(e) => e.stopPropagation()}>
                 <h3>Add product</h3>
-                <div style={{display: "flex", flexDirection: "column", gap: 8}}>
+                <div className={styles.form}>
                     <input placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
                     <input placeholder="Type" value={type} onChange={(e) => setType(e.target.value)} />
                     <input placeholder="Serial Number (optional)" value={serialNumber}
                            onChange={(e) => setSerialNumber(e.target.value)} />
                     <textarea placeholder="Specification (optional)" value={specification}
                               onChange={(e) => setSpecification(e.target.value)} />
-                    <label style={{display: "flex", alignItems: "center", gap: 6}}>
+                    <label className={styles.inlineLabel}>
                         <input type="checkbox" checked={isNew} onChange={(e) => setIsNew(e.target.checked)} />
                         Is new
                     </label>
-                    <div style={{display: "flex", gap: 8}}>
+                    <div className={styles.row}>
                         <input type="datetime-local" placeholder="Guarantee start" value={guaranteeStart}
                                onChange={(e) => setGuaranteeStart(e.target.value)} />
                         <input type="datetime-local" placeholder="Guarantee end" value={guaranteeEnd}
                                onChange={(e) => setGuaranteeEnd(e.target.value)} />
                     </div>
-                    <div style={{display: "flex", flexDirection: "column", gap: 6}}>
-                        <div style={{display: "flex", gap: 8, alignItems: "center"}}>
-                            <label style={{width: 40}}>USD</label>
+                    <div className={styles.priceBlock}>
+                        <div className={styles.rowCenter}>
+                            <label className={styles.currencyLabel}>USD</label>
                             <input type="number" min="0" step="0.01" placeholder="Price in USD" value={usdPrice}
                                    onChange={(e) => setUsdPrice(e.target.value)} />
-                            <label style={{display: "flex", alignItems: "center", gap: 4}}>
+                            <label className={styles.inlineLabel}>
                                 <input type="radio" name="defaultCurrency" value="USD" checked={defaultCurrency === "USD"}
                                        onChange={() => setDefaultCurrency("USD")} /> Default
                             </label>
                         </div>
-                        <div style={{display: "flex", gap: 8, alignItems: "center"}}>
-                            <label style={{width: 40}}>UAH</label>
+                        <div className={styles.rowCenter}>
+                            <label className={styles.currencyLabel}>UAH</label>
                             <input type="number" min="0" step="0.01" placeholder="Price in UAH" value={uahPrice}
                                    onChange={(e) => setUahPrice(e.target.value)} />
-                            <label style={{display: "flex", alignItems: "center", gap: 4}}>
+                            <label className={styles.inlineLabel}>
                                 <input type="radio" name="defaultCurrency" value="UAH" checked={defaultCurrency === "UAH"}
                                        onChange={() => setDefaultCurrency("UAH")} /> Default
                             </label>
@@ -112,10 +112,10 @@ const AddProductModal: React.FC<{
                     </div>
                     <input type="datetime-local" value={dateLocal || nowLocal} onChange={(e) => setDateLocal(e.target.value)} />
                     <input placeholder="Photo URL (optional)" value={photo} onChange={(e) => setPhoto(e.target.value)} />
-                    {photo && <img src={photo} alt="Product photo preview" style={{width: 64, height: 64, objectFit: "cover", borderRadius: 4}} />}
-                    {error && <div style={{color: "#c00"}}>{error}</div>}
+                    {photo && <img src={photo} alt="Product photo preview" className={styles.previewImg} />}
+                    {error && <div className={styles.errorText}>{error}</div>}
                 </div>
-                <div className={styles.actions} style={{marginTop: 12}}>
+                <div className={styles.actions}>
                     <button className="cancel" onClick={onClose}>Cancel</button>
                     <button className="confirm" onClick={handleSubmit}>Add</button>
                 </div>

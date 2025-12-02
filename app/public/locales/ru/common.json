@@ -1,0 +1,54 @@
+{
+  "appName": "Inventory",
+  "nav": {
+    "orders": "Заказы",
+    "products": "Товары",
+    "groups": "Группы"
+  },
+  "orders": {
+    "title": "Заказы",
+    "loading": "Загрузка заказов...",
+    "delete": "Удалить",
+    "products": "Товары",
+    "close": "Закрыть",
+    "confirmDelete": "Удалить заказ?",
+    "deleteTitle": "Удалить заказ",
+    "deleteDescription": "Вы уверены, что хотите удалить этот заказ? Это действие нельзя отменить.",
+    "deleteAria": "Удалить {{title}}",
+    "removeFromOrderAria": "Удалить {{title}} из заказа",
+    "remove": "Удалить",
+    "sidebarAria": "Детали заказа для {{title}}",
+    "add": "Добавить заказ",
+    "addAria": "Добавить новый заказ",
+    "confirm": "Подтвердить",
+    "cancel": "Отмена"
+  },
+  "products": {
+    "title": "Товары",
+    "filterType": "Фильтр по типу",
+    "placeholderAlt": "заполнитель",
+    "add": "Добавить товар",
+    "addAria": "Добавить новый товар",
+    "allTypes": "Все типы",
+    "table": {
+      "photo": "Фото",
+      "title": "Название",
+      "type": "Тип",
+      "serial": "Серийный номер",
+      "guarantee": "Гарантия",
+      "price": "Цена",
+      "order": "Заказ"
+    }
+  },
+  "common": {
+    "cancel": "Отмена",
+    "delete": "Удалить",
+    "na": "-",
+    "loading": "Загрузка...",
+    "openMenu": "Открыть меню навигации"
+  },
+  "topMenu": {
+    "searchPlaceholder": "Поиск заказов и товаров...",
+    "sessions": "Активно"
+  }
+}

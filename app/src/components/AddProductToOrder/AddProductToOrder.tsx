@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { fetchProducts } from "../../store/slices/productsSlice";
 import { Order, addProductToOrder } from "../../store/slices/ordersSlice";
+import styles from "./AddProductToOrder.module.scss";
 
 type Props = {
   order: Order;
@@ -44,7 +45,7 @@ const AddProductToOrder: React.FC<Props> = ({ order }) => {
   };
 
   return (
-    <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
+    <div className={styles.row}>
       <select
         value={selectedProductId}
         onChange={(e) =>

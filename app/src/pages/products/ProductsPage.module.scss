@@ -1,0 +1,25 @@
+.container {
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.leftGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.title {
+  margin: 0;
+}
+
+.filterLabel {
+  margin-right: 8px;
+  color: #6b7280;
+}

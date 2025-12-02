@@ -45,7 +45,7 @@ const AddOrderModal: React.FC<{
             <motion.div className={styles.modal} initial={{scale: 0.95, opacity: 0}} animate={{scale: 1, opacity: 1}}
                         onClick={(e) => e.stopPropagation()}>
                 <h3>Add order</h3>
-                <div style={{display: "flex", flexDirection: "column", gap: 8}}>
+                <div className={styles.form}>
                     <input placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
                     <textarea placeholder="Description (optional)" value={description}
                               onChange={(e) => setDescription(e.target.value)} />
@@ -60,11 +60,11 @@ const AddOrderModal: React.FC<{
                         onChange={(e) => setPhoto(e.target.value)}
                     />
                     {photo && (
-                        <img src={photo} alt="Order photo preview" style={{width: 64, height: 64, objectFit: "cover", borderRadius: 4}} />
+                        <img src={photo} alt="Order photo preview" className={styles.previewImg} />
                     )}
-                    {error && <div style={{color: "#c00"}}>{error}</div>}
+                    {error && <div className={styles.errorText}>{error}</div>}
                 </div>
-                <div className={styles.actions} style={{marginTop: 12}}>
+                <div className={styles.actions}>
                     <button className="cancel" onClick={onClose}>Cancel</button>
                     <button className="confirm" onClick={handleSubmit}>Add</button>
                 </div>

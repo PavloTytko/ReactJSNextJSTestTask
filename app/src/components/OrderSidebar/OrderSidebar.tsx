@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import AddProductToOrder from "../AddProductToOrder/AddProductToOrder";
 import { removeProductFromOrder } from "../../store/slices/ordersSlice";
+import { useTranslation } from "react-i18next";
 
 const OrderSidebar: React.FC<{ order: Order | null; onClose: () => void }> = ({
   order,
@@ -17,6 +18,7 @@ const OrderSidebar: React.FC<{ order: Order | null; onClose: () => void }> = ({
   );
 
   const dispatch = useDispatch();
+  const { t } = useTranslation("common");
 
   const onDeleteProduct = (productId: number) => {
     if (!currentOrder) return;
@@ -28,36 +30,52 @@ const OrderSidebar: React.FC<{ order: Order | null; onClose: () => void }> = ({
   return (
     <AnimatePresence>
       {currentOrder && (
-                <motion.aside
-                  className={styles.root}
-                  initial={{ x: 300, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: 300, opacity: 0 }}
-                >
-          <div className={styles.header}>
-            <h4>{currentOrder.title}</h4>
-            <button onClick={onClose}>X</button>
-          </div>
-          <div>{currentOrder.description}</div>
-          <div className={styles.products}>
-            <h5>Products</h5>
-            {currentOrder.products?.map((p: any, idx: number) => (
-              <div key={`${p.id}-${idx}`} className={styles.productItem}>
-                <span>
-                  {p.title} — {p.type}
-                </span>
-                <button
-                  onClick={() => onDeleteProduct(Number(p.id))}
-                  aria-label={`Remove ${p.title} from order`}
-                  style={{ marginLeft: 8 }}
-                >
-                  Remove
-                </button>
-              </div>
-            ))}
-            {currentOrder && <AddProductToOrder order={currentOrder} />}
-          </div>
-        </motion.aside>
+        <>
+          {/* Backdrop for mobile */}
+          <motion.div
+            className={styles.backdrop}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            aria-hidden
+          />
+          <motion.aside
+            className={styles.root}
+            initial={{ x: 320, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: 320, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 260, damping: 26 }}
+            role="complementary"
+            aria-label={t("orders.sidebarAria", { title: currentOrder.title })}
+          >
+            <div className={styles.header}>
+              <h4>{currentOrder.title}</h4>
+              <button onClick={onClose} aria-label={t("orders.close")}>
+                ×
+              </button>
+            </div>
+            <div>{currentOrder.description}</div>
+            <div className={styles.products}>
+              <h5>{t("orders.products")}</h5>
+              {currentOrder.products?.map((p: any, idx: number) => (
+                <div key={`${p.id}-${idx}`} className={styles.productItem}>
+                  <span>
+                    {p.title} — {p.type}
+                  </span>
+                  <button
+                    onClick={() => onDeleteProduct(Number(p.id))}
+                    aria-label={t("orders.removeFromOrderAria", { title: p.title })}
+                    className={styles.ml8}
+                  >
+                    {t("orders.remove")}
+                  </button>
+                </div>
+              ))}
+              {currentOrder && <AddProductToOrder order={currentOrder} />}
+            </div>
+          </motion.aside>
+        </>
       )}
     </AnimatePresence>
   );

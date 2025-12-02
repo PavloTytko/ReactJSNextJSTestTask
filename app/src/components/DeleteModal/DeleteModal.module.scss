@@ -9,7 +9,7 @@
 }
 
 .modal {
-  background: #fff;
+  background: var(--panel);
   padding: 20px;
   border-radius: 10px;
   width: 420px;
@@ -36,4 +36,49 @@
   border: 1px solid #e5e7eb;
   padding: 8px 12px;
   border-radius: 6px;
+}
+
+/* Added utility classes for Add*Modal components to remove inline styles */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+}
+
+.rowCenter {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.inlineLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.currencyLabel {
+  width: 40px;
+}
+
+.priceBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.previewImg {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.errorText {
+  color: #c00;
 }

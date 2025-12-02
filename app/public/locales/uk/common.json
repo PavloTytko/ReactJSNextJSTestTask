@@ -1,0 +1,54 @@
+{
+  "appName": "Inventory",
+  "nav": {
+    "orders": "Замовлення",
+    "products": "Товари",
+    "groups": "Групи"
+  },
+  "orders": {
+    "title": "Замовлення",
+    "loading": "Завантаження замовлень...",
+    "delete": "Видалити",
+    "products": "Товари",
+    "close": "Закрити",
+    "confirmDelete": "Видалити замовлення?",
+    "deleteTitle": "Видалити замовлення",
+    "deleteDescription": "Ви впевнені, що хочете видалити це замовлення? Дію не можна скасувати.",
+    "deleteAria": "Видалити {{title}}",
+    "removeFromOrderAria": "Видалити {{title}} із замовлення",
+    "remove": "Видалити",
+    "sidebarAria": "Деталі замовлення для {{title}}",
+    "add": "Додати замовлення",
+    "addAria": "Додати нове замовлення",
+    "confirm": "Підтвердити",
+    "cancel": "Скасувати"
+  },
+  "products": {
+    "title": "Товари",
+    "filterType": "Фільтр за типом",
+    "placeholderAlt": "заповнювач",
+    "allTypes": "Усі типи",
+    "add": "Додати товар",
+    "addAria": "Додати новий товар",
+    "table": {
+      "photo": "Фото",
+      "title": "Назва",
+      "type": "Тип",
+      "serial": "Серійний номер",
+      "guarantee": "Гарантія",
+      "price": "Ціна",
+      "order": "Замовлення"
+    }
+  },
+  "common": {
+    "cancel": "Скасувати",
+    "delete": "Видалити",
+    "na": "-",
+    "loading": "Завантаження...",
+    "openMenu": "Відкрити меню навігації"
+  },
+  "topMenu": {
+    "searchPlaceholder": "Пошук замовлень і товарів...",
+    "sessions": "Активно"
+  }
+}

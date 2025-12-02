@@ -1,0 +1,54 @@
+{
+  "appName": "Inventory",
+  "nav": {
+    "orders": "Orders",
+    "products": "Products",
+    "groups": "Groups"
+  },
+  "orders": {
+    "title": "Orders",
+    "loading": "Loading orders...",
+    "delete": "Delete",
+    "products": "Products",
+    "close": "Close",
+    "confirmDelete": "Delete order?",
+    "deleteTitle": "Delete order",
+    "deleteDescription": "Are you sure you want to delete this order? This action cannot be undone.",
+    "deleteAria": "Delete {{title}}",
+    "removeFromOrderAria": "Remove {{title}} from order",
+    "remove": "Remove",
+    "sidebarAria": "Order details for {{title}}",
+    "add": "Add Order",
+    "addAria": "Add new order",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  },
+  "products": {
+    "title": "Products",
+    "filterType": "Filter by type",
+    "placeholderAlt": "placeholder",
+    "add": "Add Product",
+    "addAria": "Add new product",
+    "allTypes": "All types",
+    "table": {
+      "photo": "Photo",
+      "title": "Title",
+      "type": "Type",
+      "serial": "Serial",
+      "guarantee": "Guarantee",
+      "price": "Price",
+      "order": "Order"
+    }
+  },
+  "common": {
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "na": "-",
+    "loading": "Loading...",
+    "openMenu": "Open navigation menu"
+  },
+  "topMenu": {
+    "searchPlaceholder": "Search orders and products...",
+    "sessions": "Active"
+  }
+}

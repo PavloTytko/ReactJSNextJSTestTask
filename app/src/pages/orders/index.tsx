@@ -17,6 +17,10 @@ import withAuth from "../../components/protectedRoute/withAuth";
 import AddOrderModal from "../../components/AddOrderModal/AddOrderModal";
 import { fetchProducts } from "../../store/slices/productsSlice";
 import { getApiBaseUrl } from "../../utils/api";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from "react-i18next";
+import { AnimatePresence } from "framer-motion";
+import styles from "./OrdersPage.module.scss";
 
 const OrdersPage: React.FC<{ initialOrders?: Order[] }> = ({
   initialOrders,
@@ -27,6 +31,7 @@ const OrdersPage: React.FC<{ initialOrders?: Order[] }> = ({
   const [selected, setSelected] = useState<Order | null>(null);
   const [showDelete, setShowDelete] = useState<number | null>(null);
   const [showAdd, setShowAdd] = useState(false);
+  const { t } = useTranslation("common");
 
   useEffect(() => {
     dispatch(setOrders(initialOrders || []));
@@ -48,23 +53,18 @@ const OrdersPage: React.FC<{ initialOrders?: Order[] }> = ({
   }, [dispatch, search]);
 
   return (
-    <div style={{ display: "flex", gap: 12, flexDirection: "column" }}>
-      <div
-        style={{
-          display: "flex",
-          marginBottom: 12,
-        }}
-      >
-        <button onClick={() => setShowAdd(true)}>Add Order</button>
+    <div className={styles.container}>
+      <div className={styles.toolbar}>
+        <div
+          className={styles.addButton}
+          onClick={() => setShowAdd(true)}
+          aria-label={t("orders.addAria")}
+        >
+          <span>+</span>
+        </div>
       </div>
-      <div
-        className=""
-        style={{
-          display: "flex",
-          marginBottom: 12,
-        }}
-      >
-        <div style={{ flex: 1 }}>
+      <div className={styles.content}>
+        <div className={styles.listWrap}>
           <OrdersList
             orders={items}
             onSelect={(o) => setSelected(o)}
@@ -73,12 +73,15 @@ const OrdersPage: React.FC<{ initialOrders?: Order[] }> = ({
           />
         </div>
         <OrderSidebar order={selected} onClose={() => setSelected(null)} />
-        {showDelete && (
-          <DeleteModal
-            onClose={() => setShowDelete(null)}
-            onConfirm={() => confirmDelete(showDelete)}
-          />
-        )}
+        <AnimatePresence>
+          {showDelete && (
+            <DeleteModal
+              key="deleteModal"
+              onClose={() => setShowDelete(null)}
+              onConfirm={() => confirmDelete(showDelete)}
+            />
+          )}
+        </AnimatePresence>
         {showAdd && (
           <AddOrderModal
             onClose={() => setShowAdd(false)}
@@ -97,9 +100,19 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     // Use centralized resolver to ensure SSR hits the same API as the client
     const baseUrl = getApiBaseUrl();
     const res = await axios.get(`${baseUrl}/rest/orders`);
-    return { props: { initialOrders: res.data } };
+    return {
+      props: {
+        ...(await serverSideTranslations(ctx.locale ?? "en", ["common"])),
+        initialOrders: res.data,
+      },
+    };
   } catch (e) {
-    return { props: { initialOrders: [] } };
+    return {
+      props: {
+        ...(await serverSideTranslations(ctx.locale ?? "en", ["common"])),
+        initialOrders: [],
+      },
+    };
   }
 };
 

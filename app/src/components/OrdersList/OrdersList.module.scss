@@ -1,17 +1,23 @@
 .root {
   width: 520px;
-  background: #fff;
+  background: var(--panel);
   border-radius: 8px;
   padding: 16px;
   margin-right: 20px;
   box-shadow: 0 4px 8px rgba(15, 23, 42, 0.03);
 }
+ 
+ .root > h3 {
+   margin: 4px 0 12px 4px;
+ }
 
 .item {
   display: flex;
   justify-content: space-between;
   padding: 12px;
   border-bottom: 1px solid #eef2f7;
+  border-radius: 8px;
+  transition: background 160ms ease;
 }
 
 .itemTitle {
@@ -19,7 +25,7 @@
 }
 
 .itemMeta {
-  color: #6b7280;
+  color: var(--muted);
   font-size: 13px;
 }
 
@@ -29,4 +35,19 @@
   padding: 6px 8px;
   color: #ef4444;
   border-radius: 6px;
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.btnDelete:hover {
+  background: #ef4444;
+  color: #fff;
+}
+
+.item:hover {
+  background: #f9fafb;
+}
+
+.clickable {
+  cursor: pointer;
 }
