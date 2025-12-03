@@ -21,6 +21,7 @@ Once everything is up:
 
 Notes
 - The frontend container exposes port 3000 inside the container, mapped to 3001 on your machine (see `docker-compose.yml`).
+- The login is fake you can put in "admin"/"admin"
 - Environment passed to the frontend in Docker:
   - `NEXT_PUBLIC_API_URL=http://api:4000` (container-to-container URL)
   - `NEXT_PUBLIC_WS_URL=http://api:4000`
