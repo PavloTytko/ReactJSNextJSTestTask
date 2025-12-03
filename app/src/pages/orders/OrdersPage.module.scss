@@ -27,13 +27,25 @@
 
 .content {
   display: flex;
+  align-items: flex-start;
+  gap: 12px;
   margin-bottom: 12px;
 }
 
 .listWrap {
-  flex: 1;
+  /* Animated width via framer-motion; allow shrinking and overflow handling */
+  min-width: 0;
 }
 
 .ml8 {
   margin-left: 8px;
+}
+
+@media (max-width: 1024px) {
+  .content {
+    display: block;
+  }
+  .listWrap {
+    width: 100% !important; /* override motion inline width on mobile */
+  }
 }

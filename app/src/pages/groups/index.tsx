@@ -5,12 +5,12 @@ import { GetServerSideProps } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const GroupsPage = () => {
-    return (
-        <div className={styles.card}>
-            <h2>Groups</h2>
-            <p>This is a placeholder Groups page. Add grouping UI or drag-and-drop here.</p>
-        </div>
-    );
+  return (
+    <div className={styles.card}>
+      <h2>Groups</h2>
+      <p></p>
+    </div>
+  );
 };
 
 export default withAuth(GroupsPage);

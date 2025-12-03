@@ -19,7 +19,7 @@ import { fetchProducts } from "../../store/slices/productsSlice";
 import { getApiBaseUrl } from "../../utils/api";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "react-i18next";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import styles from "./OrdersPage.module.scss";
 
 const OrdersPage: React.FC<{ initialOrders?: Order[] }> = ({
@@ -63,15 +63,23 @@ const OrdersPage: React.FC<{ initialOrders?: Order[] }> = ({
           <span>+</span>
         </div>
       </div>
-      <div className={styles.content}>
-        <div className={styles.listWrap}>
+      <motion.div
+        className={styles.content}
+        animate={{ gap: selected ? 0 : 12 }}
+        transition={{ type: "spring", stiffness: 260, damping: 26 }}
+      >
+        <motion.div
+          className={styles.listWrap}
+          animate={{ width: selected ? "50%" : "100%" }}
+          transition={{ type: "spring", stiffness: 260, damping: 26 }}
+        >
           <OrdersList
             orders={items}
             onSelect={(o) => setSelected(o)}
             onDelete={(id) => setShowDelete(id)}
             loading={loading}
           />
-        </div>
+        </motion.div>
         <OrderSidebar order={selected} onClose={() => setSelected(null)} />
         <AnimatePresence>
           {showDelete && (
@@ -90,7 +98,7 @@ const OrdersPage: React.FC<{ initialOrders?: Order[] }> = ({
             }}
           />
         )}
-      </div>
+      </motion.div>
     </div>
   );
 };

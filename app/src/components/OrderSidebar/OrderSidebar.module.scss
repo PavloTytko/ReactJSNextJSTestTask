@@ -1,5 +1,7 @@
 .root {
-  width: 420px;
+  width: 50%;
+  max-width: 50%;
+  flex: 0 0 50%;
   background: var(--panel);
   border-radius: 12px 0 0 12px;
   padding: 16px 16px 20px;
@@ -39,6 +41,8 @@
     top: 0;
     bottom: 0;
     width: min(92vw, 420px);
+    max-width: min(92vw, 420px);
+    flex: 0 0 auto;
     border-radius: 12px 0 0 12px;
     padding-top: 16px;
     z-index: 60;
