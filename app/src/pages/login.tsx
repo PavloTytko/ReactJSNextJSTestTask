@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
+import type { GetServerSideProps } from 'next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import styles from './login.module.scss';
 
 const fakeAuth = (username: string, password: string) => {
@@ -36,3 +38,11 @@ export default function Login() {
     </div>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(ctx.locale ?? 'en', ['common'])),
+    },
+  };
+};
