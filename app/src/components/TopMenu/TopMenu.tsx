@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import styles from "./TopMenu.module.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, AppDispatch } from "../../store/store";
-import { setSearchQuery } from "../../store/slices/uiSlice";
-import { getWsBaseUrl } from "../../utils/api";
+import { RootState, AppDispatch } from "@/store/store";
+import { setSearchQuery } from "@/store/slices/uiSlice";
+import { getWsBaseUrl } from "@/utils/api";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router";
 

@@ -1,13 +1,13 @@
 import React from "react";
-import { Order } from "../../store/slices/ordersSlice";
+import { Order } from "@/store/slices/ordersSlice";
 import styles from "./OrderSidebar.module.scss";
 import { AnimatePresence, motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, AppDispatch } from "../../store/store";
+import { RootState, AppDispatch } from "@/store/store";
 import AddProductToOrder from "../AddProductToOrder/AddProductToOrder";
-import { removeProductFromOrder } from "../../store/slices/ordersSlice";
+import { removeProductFromOrder } from "@/store/slices/ordersSlice";
 import { useTranslation } from "react-i18next";
-import type { Product } from "../../store/slices/productsSlice";
+import type { Product } from "@/store/slices/productsSlice";
 
 const OrderSidebar: React.FC<{ order: Order | null; onClose: () => void }> = ({
   order,
@@ -62,7 +62,9 @@ const OrderSidebar: React.FC<{ order: Order | null; onClose: () => void }> = ({
                   </span>
                   <button
                     onClick={() => onDeleteProduct(Number(p.id))}
-                    aria-label={t("orders.removeFromOrderAria", { title: p.title })}
+                    aria-label={t("orders.removeFromOrderAria", {
+                      title: p.title,
+                    })}
                     className={styles.ml8}
                   >
                     {t("orders.remove")}

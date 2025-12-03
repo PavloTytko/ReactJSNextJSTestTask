@@ -1,5 +1,5 @@
 import React from "react";
-import withAuth from "../../components/protectedRoute/withAuth";
+import withAuth from "@/components/protectedRoute/withAuth";
 import styles from "./GroupsPage.module.scss";
 import { GetServerSideProps } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";

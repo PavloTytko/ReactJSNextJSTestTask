@@ -2,22 +2,24 @@ import { GetServerSideProps } from "next";
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, AppDispatch } from "../../store/store";
-import ProductsList from "../../components/ProductsList/ProductsList";
-import withAuth from "../../components/protectedRoute/withAuth";
+import { RootState, AppDispatch } from "@/store/store";
+import ProductsList from "@/components/ProductsList/ProductsList";
+import withAuth from "@/components/protectedRoute/withAuth";
 import {
   fetchProducts,
   Product,
   setProducts,
   createProduct,
-} from "../../store/slices/productsSlice";
-import AddProductModal from "../../components/AddProductModal/AddProductModal";
-import { getApiBaseUrl } from "../../utils/api";
+} from "@/store/slices/productsSlice";
+import AddProductModal from "@/components/AddProductModal/AddProductModal";
+import { getApiBaseUrl } from "@/utils/api";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "react-i18next";
 import styles from "./ProductsPage.module.scss";
 
-const ProductsPage: React.FC<{ initialProducts?: Product[] }> = ({ initialProducts }) => {
+const ProductsPage: React.FC<{ initialProducts?: Product[] }> = ({
+  initialProducts,
+}) => {
   const dispatch = useDispatch<AppDispatch>();
   const { items, loading, types } = useSelector((s: RootState) => s.products);
   const search = useSelector((s: RootState) => s.ui.searchQuery);
@@ -43,7 +45,11 @@ const ProductsPage: React.FC<{ initialProducts?: Product[] }> = ({ initialProduc
     <div className={styles.container}>
       <div className={styles.header}>
         <div className={styles.leftGroup}>
-          <button onClick={() => setShowAdd(true)} aria-label={t("products.addAria")} title={t("products.add")}>
+          <button
+            onClick={() => setShowAdd(true)}
+            aria-label={t("products.addAria")}
+            title={t("products.add")}
+          >
             +
           </button>
           <h3 className={styles.title}>{t("products.title")}</h3>
@@ -73,9 +79,9 @@ const ProductsPage: React.FC<{ initialProducts?: Product[] }> = ({ initialProduc
         <ProductsList products={filteredItems} />
       )}
       {showAdd && (
-          <AddProductModal
-            onClose={() => setShowAdd(false)}
-            onSubmit={(p) => {
+        <AddProductModal
+          onClose={() => setShowAdd(false)}
+          onSubmit={(p) => {
             dispatch(createProduct(p)).then(() => setShowAdd(false));
           }}
         />

@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, AppDispatch } from "../../store/store";
-import { fetchProducts, Product } from "../../store/slices/productsSlice";
-import { Order, addProductToOrder } from "../../store/slices/ordersSlice";
+import { RootState, AppDispatch } from "@/store/store";
+import { fetchProducts, Product } from "@/store/slices/productsSlice";
+import { Order, addProductToOrder } from "@/store/slices/ordersSlice";
 import styles from "./AddProductToOrder.module.scss";
 
 type Props = {
@@ -31,7 +31,10 @@ const AddProductToOrder: React.FC<Props> = ({ order }) => {
     setSubmitting(true);
     try {
       await dispatch(
-        addProductToOrder({ orderId: order.id, productId: Number(selectedProductId) })
+        addProductToOrder({
+          orderId: order.id,
+          productId: Number(selectedProductId),
+        }),
       );
       setSelectedProductId("");
     } finally {

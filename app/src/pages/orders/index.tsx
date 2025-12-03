@@ -6,23 +6,25 @@ import {
   setOrders,
   createOrder,
   deleteOrder,
-} from "../../store/slices/ordersSlice";
+} from "@/store/slices/ordersSlice";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, AppDispatch } from "../../store/store";
-import OrdersList from "../../components/OrdersList/OrdersList";
-import OrderSidebar from "../../components/OrderSidebar/OrderSidebar";
-import DeleteModal from "../../components/DeleteModal/DeleteModal";
-import withAuth from "../../components/protectedRoute/withAuth";
-import AddOrderModal from "../../components/AddOrderModal/AddOrderModal";
-import { fetchProducts } from "../../store/slices/productsSlice";
-import { getApiBaseUrl } from "../../utils/api";
+import { RootState, AppDispatch } from "@/store/store";
+import OrdersList from "@/components/OrdersList/OrdersList";
+import OrderSidebar from "@/components/OrderSidebar/OrderSidebar";
+import DeleteModal from "@/components/DeleteModal/DeleteModal";
+import withAuth from "@/components/protectedRoute/withAuth";
+import AddOrderModal from "@/components/AddOrderModal/AddOrderModal";
+import { fetchProducts } from "@/store/slices/productsSlice";
+import { getApiBaseUrl } from "@/utils/api";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion } from "framer-motion";
 import styles from "./OrdersPage.module.scss";
 
-const OrdersPage: React.FC<{ initialOrders?: Order[] }> = ({ initialOrders }) => {
+const OrdersPage: React.FC<{ initialOrders?: Order[] }> = ({
+  initialOrders,
+}) => {
   const dispatch = useDispatch<AppDispatch>();
   const { items, loading } = useSelector((s: RootState) => s.orders);
   const search = useSelector((s: RootState) => s.ui.searchQuery);

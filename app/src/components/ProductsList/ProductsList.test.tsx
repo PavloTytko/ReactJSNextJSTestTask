@@ -1,15 +1,27 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import ProductsList from "./ProductsList";
-import { Product } from "../../store/slices/productsSlice";
+import { Product } from "@/store/slices/productsSlice";
 
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({ t: (k: string) => k }),
 }));
 
 const products: Product[] = [
-  { id: 1, title: "Prod A", type: "pc", price: [{ value: 100, symbol: "$", isDefault: 1 }], serialNumber: "S1" },
-  { id: 2, title: "Prod B", type: "server", price: [{ value: 200, symbol: "$", isDefault: 1 }], serialNumber: "S2" },
+  {
+    id: 1,
+    title: "Prod A",
+    type: "pc",
+    price: [{ value: 100, symbol: "$", isDefault: 1 }],
+    serialNumber: "S1",
+  },
+  {
+    id: 2,
+    title: "Prod B",
+    type: "server",
+    price: [{ value: 200, symbol: "$", isDefault: 1 }],
+    serialNumber: "S2",
+  },
 ];
 
 describe("ProductsList", () => {
