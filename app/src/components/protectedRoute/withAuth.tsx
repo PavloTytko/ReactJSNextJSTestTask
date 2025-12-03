@@ -1,11 +1,9 @@
-// HOC that checks localStorage for token
-import React from "react";
+import React, { ComponentType, FC } from "react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
-const withAuth = (WrappedComponent: any) => {
-    return (props: any) => {
-        // This runs client-side
+const withAuth = <P extends object>(WrappedComponent: ComponentType<P>) => {
+    const WithAuth: FC<P> = (props) => {
         const router = useRouter();
         useEffect(() => {
             if (typeof window !== "undefined") {
@@ -16,6 +14,7 @@ const withAuth = (WrappedComponent: any) => {
 
         return <WrappedComponent {...props} />;
     };
+    return WithAuth;
 };
 
 export default withAuth;

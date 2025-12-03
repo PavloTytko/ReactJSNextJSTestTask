@@ -17,7 +17,6 @@ const NavigationMenu: React.FC<{ open?: boolean; onClose?: () => void }> = ({
   ];
   return (
     <>
-      {/* Desktop sidebar */}
       <nav className={`${styles.nav} ${styles.desktop}`}>
         {nav.map((n) => (
           <Link
@@ -29,7 +28,6 @@ const NavigationMenu: React.FC<{ open?: boolean; onClose?: () => void }> = ({
           </Link>
         ))}
       </nav>
-      {/* Mobile drawer */}
       <AnimatePresence>
         {open && (
           <motion.div

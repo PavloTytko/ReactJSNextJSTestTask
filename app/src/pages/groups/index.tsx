@@ -8,7 +8,6 @@ const GroupsPage = () => {
   return (
     <div className={styles.card}>
       <h2>Groups</h2>
-      <p></p>
     </div>
   );
 };

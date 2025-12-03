@@ -9,7 +9,7 @@ import {
 } from "../../store/slices/ordersSlice";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store/store";
+import { RootState, AppDispatch } from "../../store/store";
 import OrdersList from "../../components/OrdersList/OrdersList";
 import OrderSidebar from "../../components/OrderSidebar/OrderSidebar";
 import DeleteModal from "../../components/DeleteModal/DeleteModal";
@@ -22,10 +22,8 @@ import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion } from "framer-motion";
 import styles from "./OrdersPage.module.scss";
 
-const OrdersPage: React.FC<{ initialOrders?: Order[] }> = ({
-  initialOrders,
-}) => {
-  const dispatch = useDispatch();
+const OrdersPage: React.FC<{ initialOrders?: Order[] }> = ({ initialOrders }) => {
+  const dispatch = useDispatch<AppDispatch>();
   const { items, loading } = useSelector((s: RootState) => s.orders);
   const search = useSelector((s: RootState) => s.ui.searchQuery);
   const [selected, setSelected] = useState<Order | null>(null);
@@ -35,21 +33,19 @@ const OrdersPage: React.FC<{ initialOrders?: Order[] }> = ({
 
   useEffect(() => {
     dispatch(setOrders(initialOrders || []));
-    dispatch(fetchOrders() as any);
-    dispatch(fetchProducts() as any);
+    dispatch(fetchOrders());
+    dispatch(fetchProducts());
   }, [dispatch, initialOrders]);
 
   const confirmDelete = (id: number) => {
-    // call API delete
-    dispatch(deleteOrder(id) as any).then(() => {
+    dispatch(deleteOrder(id)).then(() => {
       setShowDelete(null);
       if (selected?.id === id) setSelected(null);
     });
   };
 
-  // Re-fetch orders from the API whenever search changes (server-side filtering)
   useEffect(() => {
-    (dispatch as any)(fetchOrders(search ? { q: search } : undefined));
+    dispatch(fetchOrders(search ? { q: search } : undefined));
   }, [dispatch, search]);
 
   return (
@@ -94,7 +90,7 @@ const OrdersPage: React.FC<{ initialOrders?: Order[] }> = ({
           <AddOrderModal
             onClose={() => setShowAdd(false)}
             onSubmit={(o) => {
-              dispatch(createOrder(o) as any).then(() => setShowAdd(false));
+              dispatch(createOrder(o)).then(() => setShowAdd(false));
             }}
           />
         )}
@@ -105,7 +101,6 @@ const OrdersPage: React.FC<{ initialOrders?: Order[] }> = ({
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
-    // Use centralized resolver to ensure SSR hits the same API as the client
     const baseUrl = getApiBaseUrl();
     const res = await axios.get(`${baseUrl}/rest/orders`);
     return {

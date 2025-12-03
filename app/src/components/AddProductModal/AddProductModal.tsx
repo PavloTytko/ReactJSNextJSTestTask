@@ -37,7 +37,6 @@ const AddProductModal: React.FC<{
             setError("Title and Type are required");
             return;
         }
-        // Validate prices (allow empty). If provided, must be >= 0 numbers
         const parsedUsd = usdPrice.trim() === "" ? undefined : Number(usdPrice);
         const parsedUah = uahPrice.trim() === "" ? undefined : Number(uahPrice);
         if ((parsedUsd !== undefined && (isNaN(parsedUsd) || parsedUsd < 0)) ||

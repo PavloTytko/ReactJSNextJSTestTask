@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 const OrdersList: React.FC<{
     orders: Order[];
     loading?: boolean;
-    onSelect: (o: Order) => void;
+    onSelect: (order: Order) => void;
     onDelete: (id: number) => void
 }> = ({ orders, loading, onSelect, onDelete }) => {
     const { t } = useTranslation("common");
@@ -15,17 +15,17 @@ const OrdersList: React.FC<{
     return (
         <div className={styles.root}>
             <h3>{t("orders.title")}</h3>
-            {orders.map(o => (
-                <div key={o.id} className={styles.item}>
-                    <div onClick={() => onSelect(o)} className={styles.clickable}>
-                        <div className={styles.itemTitle}>{o.title}</div>
-                        <div className={styles.itemMeta}>{dateFull(o.date)} • {dateRelative(o.date)}</div>
+            {orders.map(order => (
+                <div key={order.id} className={styles.item}>
+                    <div onClick={() => onSelect(order)} className={styles.clickable}>
+                        <div className={styles.itemTitle}>{order.title}</div>
+                        <div className={styles.itemMeta}>{dateFull(order.date)} • {dateRelative(order.date)}</div>
                     </div>
                     <div>
                         <button
                             className={styles.btnDelete}
-                            onClick={() => onDelete(o.id)}
-                            aria-label={t("orders.deleteAria", { title: o.title })}
+                            onClick={() => onDelete(order.id)}
+                            aria-label={t("orders.deleteAria", { title: order.title })}
                         >
                             {t("common.delete")}
                         </button>

@@ -1,6 +1,7 @@
-import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { getApiBaseUrl } from "../../utils/api";
+import type { Product } from "./productsSlice";
 
 export interface Order {
     id: number;
@@ -8,7 +9,7 @@ export interface Order {
     date: string;
     description?: string;
     photo?: string;
-    products?: any[];
+    products?: Product[];
 }
 
 interface OrdersState {
@@ -51,7 +52,7 @@ export const addProductToOrder = createAsyncThunk(
     async (params: { orderId: number; productId: number }) => {
         const baseUrl = getApiBaseUrl();
         const res = await axios.post(`${baseUrl}/rest/orders/${params.orderId}/products`, { productId: params.productId });
-        return res.data as Order; // updated order
+        return res.data as Order;
     }
 );
 
@@ -60,7 +61,7 @@ export const removeProductFromOrder = createAsyncThunk(
     async (params: { orderId: number; productId: number }) => {
         const baseUrl = getApiBaseUrl();
         const res = await axios.delete(`${baseUrl}/rest/orders/${params.orderId}/products/${params.productId}`);
-        return res.data as Order; // updated order
+        return res.data as Order;
     }
 );
 
@@ -69,11 +70,9 @@ const ordersSlice = createSlice({
     initialState,
     reducers: {
         removeOrder(state, action: PayloadAction<number>) {
-            // kept for potential local updates, but API thunk preferred
             state.items = state.items.filter((o) => o.id !== action.payload);
         },
         addOrder(state, action: PayloadAction<Order>) {
-            // kept for potential local updates, but API thunk preferred
             state.items.push(action.payload);
         },
         setOrders(state, action: PayloadAction<Order[]>) {

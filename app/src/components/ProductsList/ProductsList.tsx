@@ -34,7 +34,6 @@ const ProductsList: React.FC<{ products: Product[] }> = ({ products }) => {
                 ))}
                 </tbody>
             </table>
-            {/* Responsive cards for small screens */}
             <div className={styles.cards}>
                 {products.map(p => (
                     <div key={`card-${p.id}`} className={styles.cardItem}>

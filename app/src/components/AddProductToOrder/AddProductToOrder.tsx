@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store/store";
-import { fetchProducts } from "../../store/slices/productsSlice";
+import { RootState, AppDispatch } from "../../store/store";
+import { fetchProducts, Product } from "../../store/slices/productsSlice";
 import { Order, addProductToOrder } from "../../store/slices/ordersSlice";
 import styles from "./AddProductToOrder.module.scss";
 
@@ -10,7 +10,7 @@ type Props = {
 };
 
 const AddProductToOrder: React.FC<Props> = ({ order }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { items: products, loading: productsLoading } = useSelector(
     (s: RootState) => s.products,
   );
@@ -18,25 +18,20 @@ const AddProductToOrder: React.FC<Props> = ({ order }) => {
   const [selectedProductId, setSelectedProductId] = useState<number | "">("");
   const [submitting, setSubmitting] = useState(false);
 
-  // Ensure products list is present; fetch if empty
   useEffect(() => {
     if (!productsLoading && products.length === 0) {
-      (dispatch as any)(fetchProducts());
+      dispatch(fetchProducts());
     }
   }, [dispatch, products.length, productsLoading]);
 
-  const availableProducts = useMemo(() => {
-    if (!order) return [] as any[];
-    // Allow repeats: show all products, even if already present in this order.
-    return products;
-  }, [products, order]);
+  const availableProducts = useMemo(() => products, [products]);
 
   const onAdd = async () => {
     if (!order || !selectedProductId || submitting) return;
     setSubmitting(true);
     try {
-      await (dispatch as any)(
-        addProductToOrder({ orderId: order.id, productId: Number(selectedProductId) }),
+      await dispatch(
+        addProductToOrder({ orderId: order.id, productId: Number(selectedProductId) })
       );
       setSelectedProductId("");
     } finally {
@@ -56,7 +51,7 @@ const AddProductToOrder: React.FC<Props> = ({ order }) => {
         <option value="">
           {productsLoading ? "Loading products…" : "Select product…"}
         </option>
-        {availableProducts.map((p: any) => (
+        {availableProducts.map((p: Product) => (
           <option key={p.id} value={p.id}>
             {p.title} — {p.type}
           </option>

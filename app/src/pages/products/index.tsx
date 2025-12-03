@@ -2,7 +2,7 @@ import { GetServerSideProps } from "next";
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store/store";
+import { RootState, AppDispatch } from "../../store/store";
 import ProductsList from "../../components/ProductsList/ProductsList";
 import withAuth from "../../components/protectedRoute/withAuth";
 import {
@@ -17,10 +17,8 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "react-i18next";
 import styles from "./ProductsPage.module.scss";
 
-const ProductsPage: React.FC<{ initialProducts?: Product[] }> = ({
-  initialProducts,
-}) => {
-  const dispatch = useDispatch();
+const ProductsPage: React.FC<{ initialProducts?: Product[] }> = ({ initialProducts }) => {
+  const dispatch = useDispatch<AppDispatch>();
   const { items, loading, types } = useSelector((s: RootState) => s.products);
   const search = useSelector((s: RootState) => s.ui.searchQuery);
   const [showAdd, setShowAdd] = useState(false);
@@ -28,14 +26,12 @@ const ProductsPage: React.FC<{ initialProducts?: Product[] }> = ({
   const [typeFilter, setTypeFilter] = useState<string>("");
 
   useEffect(() => {
-    // hydrate from SSR then ensure fresh data on client
     dispatch(setProducts(initialProducts || []));
-    dispatch(fetchProducts() as any);
+    dispatch(fetchProducts());
   }, [dispatch, initialProducts]);
 
-  // Re-fetch products from the API whenever search changes (server-side filtering)
   useEffect(() => {
-    (dispatch as any)(fetchProducts(search ? { q: search } : undefined));
+    dispatch(fetchProducts(search ? { q: search } : undefined));
   }, [dispatch, search]);
 
   const filteredItems = useMemo(() => {
@@ -77,10 +73,10 @@ const ProductsPage: React.FC<{ initialProducts?: Product[] }> = ({
         <ProductsList products={filteredItems} />
       )}
       {showAdd && (
-        <AddProductModal
-          onClose={() => setShowAdd(false)}
-          onSubmit={(p) => {
-            dispatch(createProduct(p) as any).then(() => setShowAdd(false));
+          <AddProductModal
+            onClose={() => setShowAdd(false)}
+            onSubmit={(p) => {
+            dispatch(createProduct(p)).then(() => setShowAdd(false));
           }}
         />
       )}

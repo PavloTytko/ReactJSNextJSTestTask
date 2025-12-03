@@ -3,35 +3,32 @@ import { Order } from "../../store/slices/ordersSlice";
 import styles from "./OrderSidebar.module.scss";
 import { AnimatePresence, motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store/store";
+import { RootState, AppDispatch } from "../../store/store";
 import AddProductToOrder from "../AddProductToOrder/AddProductToOrder";
 import { removeProductFromOrder } from "../../store/slices/ordersSlice";
 import { useTranslation } from "react-i18next";
+import type { Product } from "../../store/slices/productsSlice";
 
 const OrderSidebar: React.FC<{ order: Order | null; onClose: () => void }> = ({
   order,
   onClose,
 }) => {
-  // Derive the fresh order from store to keep sidebar in sync after updates
   const currentOrder = useSelector((s: RootState) =>
     order ? s.orders.items.find((o) => o.id === order.id) || order : null,
   );
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { t } = useTranslation("common");
 
   const onDeleteProduct = (productId: number) => {
     if (!currentOrder) return;
-    (dispatch as any)(
-      removeProductFromOrder({ orderId: currentOrder.id, productId }),
-    );
+    dispatch(removeProductFromOrder({ orderId: currentOrder.id, productId }));
   };
 
   return (
     <AnimatePresence>
       {currentOrder && (
         <>
-          {/* Backdrop for mobile */}
           <motion.div
             className={styles.backdrop}
             initial={{ opacity: 0 }}
@@ -58,8 +55,8 @@ const OrderSidebar: React.FC<{ order: Order | null; onClose: () => void }> = ({
             <div>{currentOrder.description}</div>
             <div className={styles.products}>
               <h5>{t("orders.products")}</h5>
-              {currentOrder.products?.map((p: any, idx: number) => (
-                <div key={`${p.id}-${idx}`} className={styles.productItem}>
+              {currentOrder.products?.map((p: Product) => (
+                <div key={p.id} className={styles.productItem}>
                   <span>
                     {p.title} — {p.type}
                   </span>
