@@ -1,21 +1,21 @@
-import React, { useMemo, useState } from "react";
-import styles from "../DeleteModal/DeleteModal.module.scss";
-import { motion } from "framer-motion";
-import { Order } from "@/store/slices/ordersSlice";
+import React, { useMemo, useState } from 'react';
+import styles from '../DeleteModal/DeleteModal.module.scss';
+import { motion } from 'framer-motion';
+import { Order } from '@/store/slices/ordersSlice';
 
 const AddOrderModal: React.FC<{
   onClose: () => void;
-  onSubmit: (order: Omit<Order, "id">) => void;
+  onSubmit: (order: Omit<Order, 'id'>) => void;
 }> = ({ onClose, onSubmit }) => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [photo, setPhoto] = useState("");
-  const [dateLocal, setDateLocal] = useState<string>("");
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [photo, setPhoto] = useState('');
+  const [dateLocal, setDateLocal] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
 
   const nowLocal = useMemo(() => {
     const d = new Date();
-    const pad = (n: number) => String(n).padStart(2, "0");
+    const pad = (n: number) => String(n).padStart(2, '0');
     const yyyy = d.getFullYear();
     const mm = pad(d.getMonth() + 1);
     const dd = pad(d.getDate());
@@ -26,12 +26,10 @@ const AddOrderModal: React.FC<{
 
   const handleSubmit = () => {
     if (!title.trim()) {
-      setError("Title is required");
+      setError('Title is required');
       return;
     }
-    const isoDate = dateLocal
-      ? new Date(dateLocal).toISOString()
-      : new Date().toISOString();
+    const isoDate = dateLocal ? new Date(dateLocal).toISOString() : new Date().toISOString();
     onSubmit({
       title: title.trim(),
       description: description.trim() || undefined,
@@ -52,11 +50,7 @@ const AddOrderModal: React.FC<{
       >
         <h3>Add order</h3>
         <div className={styles.form}>
-          <input
-            placeholder="Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
+          <input placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
           <textarea
             placeholder="Description (optional)"
             value={description}
@@ -72,13 +66,7 @@ const AddOrderModal: React.FC<{
             value={photo}
             onChange={(e) => setPhoto(e.target.value)}
           />
-          {photo && (
-            <img
-              src={photo}
-              alt="Order photo preview"
-              className={styles.previewImg}
-            />
-          )}
+          {photo && <img src={photo} alt="Order photo preview" className={styles.previewImg} />}
           {error && <div className={styles.errorText}>{error}</div>}
         </div>
         <div className={styles.actions}>

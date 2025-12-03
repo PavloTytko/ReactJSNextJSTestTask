@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import NavigationMenu from "../NavigationMenu/NavigationMenu";
-import TopMenu from "../TopMenu/TopMenu";
-import styles from "./Layout.module.scss";
+import React, { useState } from 'react';
+import NavigationMenu from '../NavigationMenu/NavigationMenu';
+import TopMenu from '../TopMenu/TopMenu';
+import styles from './Layout.module.scss';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [navOpen, setNavOpen] = useState(false);

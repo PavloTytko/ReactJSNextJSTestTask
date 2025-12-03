@@ -32,7 +32,9 @@ app.use(
       if (!origin) return callback(null, true);
 
       // Accept localhost/127.0.0.1 on any port 3000-3999 by pattern, plus explicit list above
-      const isLocalPort = /^(http:\/\/(localhost|127\.0\.0\.1):3\d{3})$/.test(origin);
+      const isLocalPort = /^(http:\/\/(localhost|127\.0\.0\.1):3\d{3})$/.test(
+        origin,
+      );
       if (isLocalPort || allowedOrigins.has(origin)) {
         return callback(null, true);
       }
@@ -59,18 +61,29 @@ app.use("/images", express.static("/usr/src/api/images"));
    `${NEXT_PUBLIC_API_URL}/rest/...`, but the Express server must register just `/rest/...`.
 */
 app.get(`/rest/orders`, (req, res) => {
-  const q = String((req.query as any)?.q || "").trim().toLowerCase();
+  const q = String((req.query as any)?.q || "")
+    .trim()
+    .toLowerCase();
   if (!q) return res.json(orders);
-  const contains = (v?: any) => typeof v === "string" && v.toLowerCase().includes(q);
+  const contains = (v?: any) =>
+    typeof v === "string" && v.toLowerCase().includes(q);
   const matches = orders.filter((o) => {
     const inOrder =
       contains((o as any).title) ||
       contains((o as any).description) ||
-      String((o as any).id || "").toLowerCase().includes(q) ||
+      String((o as any).id || "")
+        .toLowerCase()
+        .includes(q) ||
       contains((o as any).date);
-    const prods: any[] = Array.isArray((o as any).products) ? (o as any).products : [];
+    const prods: any[] = Array.isArray((o as any).products)
+      ? (o as any).products
+      : [];
     const inProducts = prods.some(
-      (p: any) => contains(p?.title) || contains(p?.type) || contains(p?.serialNumber) || contains(p?.specification),
+      (p: any) =>
+        contains(p?.title) ||
+        contains(p?.type) ||
+        contains(p?.serialNumber) ||
+        contains(p?.specification),
     );
     return inOrder || inProducts;
   });
@@ -78,16 +91,22 @@ app.get(`/rest/orders`, (req, res) => {
 });
 
 app.get(`/rest/products`, (req, res) => {
-  const q = String((req.query as any)?.q || "").trim().toLowerCase();
+  const q = String((req.query as any)?.q || "")
+    .trim()
+    .toLowerCase();
   if (!q) return res.json(products);
-  const contains = (v?: any) => typeof v === "string" && v.toLowerCase().includes(q);
-  const matches = products.filter((p: any) =>
-    contains(p.title) ||
-    contains(p.type) ||
-    contains(p.serialNumber) ||
-    contains(p.specification) ||
-    // Also search price currency symbols, if present
-    (Array.isArray(p.price) ? p.price.some((pr: any) => contains(pr?.symbol)) : false)
+  const contains = (v?: any) =>
+    typeof v === "string" && v.toLowerCase().includes(q);
+  const matches = products.filter(
+    (p: any) =>
+      contains(p.title) ||
+      contains(p.type) ||
+      contains(p.serialNumber) ||
+      contains(p.specification) ||
+      // Also search price currency symbols, if present
+      (Array.isArray(p.price)
+        ? p.price.some((pr: any) => contains(pr?.symbol))
+        : false),
   );
   return res.json(matches);
 });
@@ -96,7 +115,9 @@ app.get(`/rest/products`, (req, res) => {
 app.post(`/rest/orders`, (req, res) => {
   const body = req.body || {};
   // generate new id
-  const nextId = orders.length ? Math.max(...orders.map((o) => o.id || 0)) + 1 : 1;
+  const nextId = orders.length
+    ? Math.max(...orders.map((o) => o.id || 0)) + 1
+    : 1;
   const newOrder = {
     id: nextId,
     title: body.title ?? `Order ${nextId}`,
@@ -129,14 +150,18 @@ app.post(`/rest/orders/:id/products`, (req, res) => {
   const { productId } = req.body || {};
 
   if (typeof productId !== "number") {
-    return res.status(400).json({ ok: false, error: "productId must be provided" });
+    return res
+      .status(400)
+      .json({ ok: false, error: "productId must be provided" });
   }
 
   const order = orders.find((o) => o.id === orderId);
-  if (!order) return res.status(404).json({ ok: false, error: "Order not found" });
+  if (!order)
+    return res.status(404).json({ ok: false, error: "Order not found" });
 
   const product = products.find((p) => p.id === productId);
-  if (!product) return res.status(404).json({ ok: false, error: "Product not found" });
+  if (!product)
+    return res.status(404).json({ ok: false, error: "Product not found" });
 
   // assign product to this order
   (product as any).order = orderId;
@@ -160,10 +185,12 @@ app.delete(`/rest/orders/:id/products/:productId`, (req, res) => {
   const productId = Number(req.params.productId);
 
   const order = orders.find((o) => o.id === orderId);
-  if (!order) return res.status(404).json({ ok: false, error: "Order not found" });
+  if (!order)
+    return res.status(404).json({ ok: false, error: "Order not found" });
 
   const product = products.find((p) => p.id === productId);
-  if (!product) return res.status(404).json({ ok: false, error: "Product not found" });
+  if (!product)
+    return res.status(404).json({ ok: false, error: "Product not found" });
 
   // Detach only a single occurrence of the product from the order (in case duplicates exist)
   if (Array.isArray((order as any).products)) {
@@ -191,7 +218,9 @@ app.delete(`/rest/orders/:id/products/:productId`, (req, res) => {
 // Create product
 app.post(`/rest/products`, (req, res) => {
   const body = req.body || {};
-  const nextId = products.length ? Math.max(...products.map((p) => p.id || 0)) + 1 : 1;
+  const nextId = products.length
+    ? Math.max(...products.map((p) => p.id || 0)) + 1
+    : 1;
   const newProduct = {
     id: nextId,
     title: body.title ?? `Product ${nextId}`,
@@ -296,9 +325,14 @@ const io = new IOServer(httpServer, {
   cors: {
     origin: (origin, callback) => {
       if (!origin) return callback(null, true);
-      const isLocalPort = /^(http:\/\/(localhost|127\.0\.0\.1):3\d{3})$/.test(origin);
-      if (isLocalPort || allowedOrigins.has(origin)) return callback(null, true);
-      return callback(new Error(`CORS (socket): Origin not allowed: ${origin}`));
+      const isLocalPort = /^(http:\/\/(localhost|127\.0\.0\.1):3\d{3})$/.test(
+        origin,
+      );
+      if (isLocalPort || allowedOrigins.has(origin))
+        return callback(null, true);
+      return callback(
+        new Error(`CORS (socket): Origin not allowed: ${origin}`),
+      );
     },
     methods: ["GET", "POST"],
     credentials: true,

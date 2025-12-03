@@ -1,6 +1,6 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import axios from "axios";
-import { getApiBaseUrl } from "@/utils/api";
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import axios from 'axios';
+import { getApiBaseUrl } from '@/utils/api';
 
 export interface Price {
   value: number;
@@ -35,18 +35,15 @@ interface ProductsState {
 
 const initialState: ProductsState = { items: [], loading: false, types: [] };
 
-export const fetchProducts = createAsyncThunk(
-  "products/fetch",
-  async (params?: { q?: string }) => {
-    const baseUrl = getApiBaseUrl();
-    const res = await axios.get(`${baseUrl}/rest/products`, { params });
-    return res.data as Product[];
-  },
-);
+export const fetchProducts = createAsyncThunk('products/fetch', async (params?: { q?: string }) => {
+  const baseUrl = getApiBaseUrl();
+  const res = await axios.get(`${baseUrl}/rest/products`, { params });
+  return res.data as Product[];
+});
 
 export const createProduct = createAsyncThunk(
-  "products/create",
-  async (product: Omit<Product, "id">) => {
+  'products/create',
+  async (product: Omit<Product, 'id'>) => {
     const baseUrl = getApiBaseUrl();
     const res = await axios.post(`${baseUrl}/rest/products`, product);
     return res.data as Product;
@@ -54,7 +51,7 @@ export const createProduct = createAsyncThunk(
 );
 
 const productsSlice = createSlice({
-  name: "products",
+  name: 'products',
   initialState,
   reducers: {
     setProducts(state, action: PayloadAction<Product[]>) {

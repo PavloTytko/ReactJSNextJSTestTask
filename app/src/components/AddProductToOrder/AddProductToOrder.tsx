@@ -1,9 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState, AppDispatch } from "@/store/store";
-import { fetchProducts, Product } from "@/store/slices/productsSlice";
-import { Order, addProductToOrder } from "@/store/slices/ordersSlice";
-import styles from "./AddProductToOrder.module.scss";
+import React, { useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState, AppDispatch } from '@/store/store';
+import { fetchProducts, Product } from '@/store/slices/productsSlice';
+import { Order, addProductToOrder } from '@/store/slices/ordersSlice';
+import styles from './AddProductToOrder.module.scss';
 
 type Props = {
   order: Order;
@@ -11,11 +11,9 @@ type Props = {
 
 const AddProductToOrder: React.FC<Props> = ({ order }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { items: products, loading: productsLoading } = useSelector(
-    (s: RootState) => s.products,
-  );
+  const { items: products, loading: productsLoading } = useSelector((s: RootState) => s.products);
 
-  const [selectedProductId, setSelectedProductId] = useState<number | "">("");
+  const [selectedProductId, setSelectedProductId] = useState<number | ''>('');
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -36,7 +34,7 @@ const AddProductToOrder: React.FC<Props> = ({ order }) => {
           productId: Number(selectedProductId),
         }),
       );
-      setSelectedProductId("");
+      setSelectedProductId('');
     } finally {
       setSubmitting(false);
     }
@@ -46,14 +44,10 @@ const AddProductToOrder: React.FC<Props> = ({ order }) => {
     <div className={styles.row}>
       <select
         value={selectedProductId}
-        onChange={(e) =>
-          setSelectedProductId(e.target.value ? Number(e.target.value) : "")
-        }
+        onChange={(e) => setSelectedProductId(e.target.value ? Number(e.target.value) : '')}
         disabled={submitting || productsLoading}
       >
-        <option value="">
-          {productsLoading ? "Loading products…" : "Select product…"}
-        </option>
+        <option value="">{productsLoading ? 'Loading products…' : 'Select product…'}</option>
         {availableProducts.map((p: Product) => (
           <option key={p.id} value={p.id}>
             {p.title} — {p.type}
@@ -61,7 +55,7 @@ const AddProductToOrder: React.FC<Props> = ({ order }) => {
         ))}
       </select>
       <button onClick={onAdd} disabled={!selectedProductId || submitting}>
-        {submitting ? "Adding…" : "Add to order"}
+        {submitting ? 'Adding…' : 'Add to order'}
       </button>
     </div>
   );

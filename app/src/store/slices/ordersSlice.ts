@@ -1,7 +1,7 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import axios from "axios";
-import { getApiBaseUrl } from "@/utils/api";
-import type { Product } from "./productsSlice";
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import axios from 'axios';
+import { getApiBaseUrl } from '@/utils/api';
+import type { Product } from './productsSlice';
 
 export interface Order {
   id: number;
@@ -20,47 +20,37 @@ interface OrdersState {
 
 const initialState: OrdersState = { items: [], loading: false };
 
-export const fetchOrders = createAsyncThunk(
-  "orders/fetch",
-  async (params?: { q?: string }) => {
-    const baseUrl = getApiBaseUrl();
-    const res = await axios.get(`${baseUrl}/rest/orders`, { params });
-    return res.data as Order[];
-  },
-);
+export const fetchOrders = createAsyncThunk('orders/fetch', async (params?: { q?: string }) => {
+  const baseUrl = getApiBaseUrl();
+  const res = await axios.get(`${baseUrl}/rest/orders`, { params });
+  return res.data as Order[];
+});
 
-export const createOrder = createAsyncThunk(
-  "orders/create",
-  async (order: Omit<Order, "id">) => {
-    const baseUrl = getApiBaseUrl();
-    const res = await axios.post(`${baseUrl}/rest/orders`, order);
-    return res.data as Order;
-  },
-);
+export const createOrder = createAsyncThunk('orders/create', async (order: Omit<Order, 'id'>) => {
+  const baseUrl = getApiBaseUrl();
+  const res = await axios.post(`${baseUrl}/rest/orders`, order);
+  return res.data as Order;
+});
 
-export const deleteOrder = createAsyncThunk(
-  "orders/delete",
-  async (id: number) => {
-    const baseUrl = getApiBaseUrl();
-    await axios.delete(`${baseUrl}/rest/orders/${id}`);
-    return id;
-  },
-);
+export const deleteOrder = createAsyncThunk('orders/delete', async (id: number) => {
+  const baseUrl = getApiBaseUrl();
+  await axios.delete(`${baseUrl}/rest/orders/${id}`);
+  return id;
+});
 
 export const addProductToOrder = createAsyncThunk(
-  "orders/addProductToOrder",
+  'orders/addProductToOrder',
   async (params: { orderId: number; productId: number }) => {
     const baseUrl = getApiBaseUrl();
-    const res = await axios.post(
-      `${baseUrl}/rest/orders/${params.orderId}/products`,
-      { productId: params.productId },
-    );
+    const res = await axios.post(`${baseUrl}/rest/orders/${params.orderId}/products`, {
+      productId: params.productId,
+    });
     return res.data as Order;
   },
 );
 
 export const removeProductFromOrder = createAsyncThunk(
-  "orders/removeProductFromOrder",
+  'orders/removeProductFromOrder',
   async (params: { orderId: number; productId: number }) => {
     const baseUrl = getApiBaseUrl();
     const res = await axios.delete(
@@ -71,7 +61,7 @@ export const removeProductFromOrder = createAsyncThunk(
 );
 
 const ordersSlice = createSlice({
-  name: "orders",
+  name: 'orders',
   initialState,
   reducers: {
     removeOrder(state, action: PayloadAction<number>) {

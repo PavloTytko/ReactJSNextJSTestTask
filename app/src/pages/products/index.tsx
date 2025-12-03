@@ -1,31 +1,24 @@
-import { GetServerSideProps } from "next";
-import React, { useEffect, useMemo, useState } from "react";
-import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState, AppDispatch } from "@/store/store";
-import ProductsList from "@/components/ProductsList/ProductsList";
-import withAuth from "@/components/protectedRoute/withAuth";
-import {
-  fetchProducts,
-  Product,
-  setProducts,
-  createProduct,
-} from "@/store/slices/productsSlice";
-import AddProductModal from "@/components/AddProductModal/AddProductModal";
-import { getApiBaseUrl } from "@/utils/api";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { useTranslation } from "next-i18next";
-import styles from "./ProductsPage.module.scss";
+import { GetServerSideProps } from 'next';
+import React, { useEffect, useMemo, useState } from 'react';
+import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState, AppDispatch } from '@/store/store';
+import ProductsList from '@/components/ProductsList/ProductsList';
+import withAuth from '@/components/protectedRoute/withAuth';
+import { fetchProducts, Product, setProducts, createProduct } from '@/store/slices/productsSlice';
+import AddProductModal from '@/components/AddProductModal/AddProductModal';
+import { getApiBaseUrl } from '@/utils/api';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next';
+import styles from './ProductsPage.module.scss';
 
-const ProductsPage: React.FC<{ initialProducts?: Product[] }> = ({
-  initialProducts,
-}) => {
+const ProductsPage: React.FC<{ initialProducts?: Product[] }> = ({ initialProducts }) => {
   const dispatch = useDispatch<AppDispatch>();
   const { items, loading, types } = useSelector((s: RootState) => s.products);
   const search = useSelector((s: RootState) => s.ui.searchQuery);
   const [showAdd, setShowAdd] = useState(false);
-  const { t } = useTranslation("common");
-  const [typeFilter, setTypeFilter] = useState<string>("");
+  const { t } = useTranslation('common');
+  const [typeFilter, setTypeFilter] = useState<string>('');
 
   useEffect(() => {
     dispatch(setProducts(initialProducts || []));
@@ -47,24 +40,24 @@ const ProductsPage: React.FC<{ initialProducts?: Product[] }> = ({
         <div className={styles.leftGroup}>
           <button
             onClick={() => setShowAdd(true)}
-            aria-label={t("products.addAria")}
-            title={t("products.add")}
+            aria-label={t('products.addAria')}
+            title={t('products.add')}
           >
             +
           </button>
-          <h3 className={styles.title}>{t("products.title")}</h3>
+          <h3 className={styles.title}>{t('products.title')}</h3>
         </div>
         <div>
           <label htmlFor="typeFilter" className={styles.filterLabel}>
-            {t("products.filterType")}:
+            {t('products.filterType')}:
           </label>
           <select
             id="typeFilter"
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
-            aria-label={t("products.filterType")}
+            aria-label={t('products.filterType')}
           >
-            <option value="">{t("products.allTypes")}</option>
+            <option value="">{t('products.allTypes')}</option>
             {types.map((tp) => (
               <option key={tp} value={tp}>
                 {tp}
@@ -74,7 +67,7 @@ const ProductsPage: React.FC<{ initialProducts?: Product[] }> = ({
         </div>
       </div>
       {loading && items.length === 0 ? (
-        <div>{t("common.loading")}</div>
+        <div>{t('common.loading')}</div>
       ) : (
         <ProductsList products={filteredItems} />
       )}
@@ -96,14 +89,14 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const res = await axios.get(`${baseUrl}/rest/products`);
     return {
       props: {
-        ...(await serverSideTranslations(ctx.locale ?? "en", ["common"])),
+        ...(await serverSideTranslations(ctx.locale ?? 'en', ['common'])),
         initialProducts: res.data,
       },
     };
   } catch (e) {
     return {
       props: {
-        ...(await serverSideTranslations(ctx.locale ?? "en", ["common"])),
+        ...(await serverSideTranslations(ctx.locale ?? 'en', ['common'])),
         initialProducts: [],
       },
     };

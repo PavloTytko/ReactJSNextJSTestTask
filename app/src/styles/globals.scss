@@ -3,13 +3,20 @@
   --panel: #fff;
   --accent: #2563eb;
   --muted: #6b7280;
-  --main-green: #8BC34A;
-  --darker-green: #689E30;
+  --main-green: #8bc34a;
+  --darker-green: #689e30;
 }
 
 body {
   margin: 0;
-  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial;
   background: var(--bg);
   color: #111827;
 }
@@ -19,6 +26,8 @@ a {
   text-decoration: none;
 }
 
-input, button, select {
+input,
+button,
+select {
   font-family: inherit;
 }
