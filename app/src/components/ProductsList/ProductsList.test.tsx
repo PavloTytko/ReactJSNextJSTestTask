@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import ProductsList from "./ProductsList";
 import { Product } from "@/store/slices/productsSlice";
 
-jest.mock("react-i18next", () => ({
+jest.mock("next-i18next", () => ({
   useTranslation: () => ({ t: (k: string) => k }),
 }));
 

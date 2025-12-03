@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/store/store";
 import { setSearchQuery } from "@/store/slices/uiSlice";
 import { getWsBaseUrl } from "@/utils/api";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
 const wsUrl = getWsBaseUrl();

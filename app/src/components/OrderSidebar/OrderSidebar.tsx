@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/store/store";
 import AddProductToOrder from "../AddProductToOrder/AddProductToOrder";
 import { removeProductFromOrder } from "@/store/slices/ordersSlice";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 import type { Product } from "@/store/slices/productsSlice";
 
 const OrderSidebar: React.FC<{ order: Order | null; onClose: () => void }> = ({

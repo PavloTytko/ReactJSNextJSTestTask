@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./DeleteModal.module.scss";
 import { motion } from "framer-motion";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 
 const DeleteModal: React.FC<{ onClose: () => void; onConfirm: () => void }> = ({ onClose, onConfirm }) => {
     const { t } = useTranslation("common");

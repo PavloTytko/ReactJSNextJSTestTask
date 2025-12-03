@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import OrdersList from "./OrdersList";
 import { Order } from "@/store/slices/ordersSlice";
 
-jest.mock("react-i18next", () => ({
+jest.mock("next-i18next", () => ({
   useTranslation: () => ({
     t: (k: string, opts?: any) => {
       if (k === "orders.deleteAria" && opts?.title)

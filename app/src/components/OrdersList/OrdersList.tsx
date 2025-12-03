@@ -2,7 +2,7 @@ import React from "react";
 import { Order } from "@/store/slices/ordersSlice";
 import styles from "./OrdersList.module.scss";
 import { dateFull, dateRelative } from "@/utils/date";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 
 const OrdersList: React.FC<{
   orders: Order[];
@@ -20,7 +20,8 @@ const OrdersList: React.FC<{
           <div onClick={() => onSelect(order)} className={styles.clickable}>
             <div className={styles.itemTitle}>{order.title}</div>
             <div className={styles.itemMeta}>
-              {dateFull(order.date)} • {dateRelative(order.date)}
+              {dateFull(order.date)} •
+              <span suppressHydrationWarning> {dateRelative(order.date)}</span>
             </div>
           </div>
           <div>

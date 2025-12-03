@@ -1,7 +1,7 @@
 import React from "react";
 import { Product } from "@/store/slices/productsSlice";
 import styles from "./ProductsList.module.scss";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 
 const ProductsList: React.FC<{ products: Product[] }> = ({ products }) => {
   const { t } = useTranslation("common");
@@ -26,11 +26,7 @@ const ProductsList: React.FC<{ products: Product[] }> = ({ products }) => {
                 {p.photo ? (
                   <img src={p.photo} className={styles.thumb} alt={p.title} />
                 ) : (
-                  <img
-                    src="/images/placeholder.png"
-                    className={styles.thumb}
-                    alt={t("products.placeholderAlt")}
-                  />
+                  <div className={styles.thumb} />
                 )}
               </td>
               <td>{p.title}</td>
@@ -55,11 +51,7 @@ const ProductsList: React.FC<{ products: Product[] }> = ({ products }) => {
             {p.photo ? (
               <img src={p.photo} className={styles.thumb} alt={p.title} />
             ) : (
-              <img
-                src="/images/placeholder.png"
-                className={styles.thumb}
-                alt={t("products.placeholderAlt")}
-              />
+              <div className={styles.thumb} />
             )}
             <div className={styles.cardBody}>
               <div>

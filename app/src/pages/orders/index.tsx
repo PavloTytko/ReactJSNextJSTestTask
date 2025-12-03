@@ -18,7 +18,7 @@ import AddOrderModal from "@/components/AddOrderModal/AddOrderModal";
 import { fetchProducts } from "@/store/slices/productsSlice";
 import { getApiBaseUrl } from "@/utils/api";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 import { AnimatePresence, motion } from "framer-motion";
 import styles from "./OrdersPage.module.scss";
 

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import styles from "./NavigationMenu.module.scss";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 import { AnimatePresence, motion } from "framer-motion";
 
 const NavigationMenu: React.FC<{ open?: boolean; onClose?: () => void }> = ({
